@@ -55,6 +55,23 @@ public class SomeBuilderViewModel
             .NavigateAsync();
     }
 
+    public async Task NavigateToHomePageWithAddParameters()
+    {
+        await navigationService.CreateBuilder()
+            .AddSegment<HomePage>()
+            .AddParameter("KeyOne", "Hello World")
+            .NavigateAsync();
+    }
+
+    public async Task NavigateToHomePageWithMutlipleAddParameters()
+    {
+        await navigationService.CreateBuilder()
+            .AddSegment<HomePage>()
+            .AddParameter("KeyOne", "Hello World")
+            .AddParameter("KeyTwo", 123456)
+            .NavigateAsync();
+    }
+
     public async Task NavigateToModalNavigationHomePage()
     {
         await navigationService.CreateBuilder()
@@ -157,6 +174,41 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
                 {
                     { "KeyOne", "Hello World" },
                 })
+                .NavigateAsync(),
+            Times.Once());
+    }
+
+    [Fact]
+    public async Task Verify_NavigateToHomePageWithAddParameters()
+    {
+        // Arrange
+
+        // Act
+        await Sut.NavigateToHomePageWithAddParameters();
+
+        // Assert
+        navigationService.VerifyNavigation(
+            nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter("KeyOne", "Hello World")
+                .NavigateAsync(),
+            Times.Once());
+    }
+
+    [Fact]
+    public async Task Verify_NavigateToHomePageWithMultipleAddParameters()
+    {
+        // Arrange
+
+        // Act
+        await Sut.NavigateToHomePageWithMutlipleAddParameters();
+
+        // Assert
+        navigationService.VerifyNavigation(
+            nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter("KeyOne", "Hello World")
+                .AddParameter("KeyTwo", 123456)
                 .NavigateAsync(),
             Times.Once());
     }

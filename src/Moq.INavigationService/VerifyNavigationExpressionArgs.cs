@@ -152,7 +152,18 @@ internal class VerifyNavigationExpressionArgs
 
                 case nameof(INavigationBuilder.AddParameter):
                     {
-                        var key = call.Arguments.FirstOrDefault();
+                        var keyArgument = call.Arguments[0];
+                        var valueArgument = call.Arguments[1];
+
+                        var keyValue = Expression.Lambda(keyArgument)
+                            .Compile()
+                            .DynamicInvoke() as string;
+
+                        var valueValue = Expression.Lambda(valueArgument)
+                            .Compile()
+                            .DynamicInvoke();
+
+                        builder.AddParameter(keyValue, valueValue);
 
                         break;
                     }
