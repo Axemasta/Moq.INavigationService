@@ -120,7 +120,7 @@ public static class VerifyNavigationExtensions
 
     private static Expression CreateNavigationParametersExpression(VerifyNavigationExpression verifyNavigationExpression)
     {
-        if (verifyNavigationExpression.NavigationParametersExpression is null)
+        if (verifyNavigationExpression.NavigationParametersExpression is null && verifyNavigationExpression.Args.NavigationParameters is null)
         {
             return Expression.Call(typeof(It), "IsAny", new[] { typeof(INavigationParameters) });
         }

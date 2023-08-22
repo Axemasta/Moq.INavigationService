@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
+using Prism.Navigation.Builder;
 
 namespace Moq;
 
@@ -9,10 +11,12 @@ internal class VerifyNavigationExpressionArgs
 
     public static VerifyNavigationExpressionArgs FromNavigationBuilderExpression(Expression expression)
     {
+        var args = ParseUriBuilderExpression(expression);
+
         return new VerifyNavigationExpressionArgs
         {
-            NavigationUri = GetBuilderUriFrom(expression),
-            NavigationParameters = ExpressionInspector.GetArgOf<NavigationParameters>(expression),
+            NavigationUri = args.Uri,
+            NavigationParameters = args.NavigationParameters,
         };
     }
 
@@ -25,11 +29,155 @@ internal class VerifyNavigationExpressionArgs
         };
     }
 
-    private static Uri GetBuilderUriFrom(Expression expression)
+    private static List<MethodCallExpression> GetMethodCallExpressionHierarchy(MethodCallExpression methodCall)
     {
-        var methodCall = (MethodCallExpression)((LambdaExpression)expression).Body;
+        var calls = new List<MethodCallExpression>()
+        {
+            methodCall,
+        };
 
-        return new Uri("HomePage", UriKind.Relative);
+        MethodCallExpression? currentExpression = methodCall;
+
+        while (currentExpression != null)
+        {
+            currentExpression = GetPreviousCall(currentExpression); ;
+
+            if (currentExpression is not null)
+            {
+                calls.Add(currentExpression);
+            }
+        }
+
+        return calls;
+    }
+
+    private static MethodCallExpression? GetPreviousCall(MethodCallExpression methodCall)
+    {
+        if (methodCall is null)
+        {
+            return null;
+        }
+
+        if (methodCall.Object is not null)
+        {
+            return methodCall.Object as MethodCallExpression;
+        }
+
+        if (methodCall.Arguments.Any())
+        {
+            return methodCall.Arguments.FirstOrDefault() as MethodCallExpression;
+        }
+
+        return null;
+    }
+
+    private static INavigationBuilder CreateNavigationBuilder(INavigationService navigationService)
+    {
+        var prismAssembly = typeof(INavigationService).Assembly;
+
+        var prismTypes = prismAssembly.GetTypes();
+
+        var navigationBuilderType = prismTypes.FirstOrDefault(t => t.Name == "NavigationBuilder");
+
+        if (navigationBuilderType is null)
+        {
+            throw new InvalidOperationException("Unable to find prism type for NavigationBuilder");
+        }
+
+        var builder = Activator.CreateInstance(navigationBuilderType, navigationService) as INavigationBuilder;
+
+        return builder ?? throw new InvalidOperationException("Unable to create instance of NavigationBuilder");
+    }
+
+    private static (Uri Uri, INavigationParameters? NavigationParameters) ParseUriBuilderExpression(Expression expression)
+    {
+        var methodCall  = (MethodCallExpression)((LambdaExpression)expression).Body;
+
+        var obj = methodCall.Object as MethodCallExpression;
+
+        var methodCalls = GetMethodCallExpressionHierarchy(methodCall);
+
+        var mockNavigationService = new Mock<INavigationService>();
+
+        var builder = CreateNavigationBuilder(mockNavigationService.Object);
+
+        var outerMethodNames = new List<string>()
+        {
+            nameof(NavigationBuilderExtensions.CreateBuilder),
+            nameof(INavigationService.NavigateAsync)
+        };
+
+        // Reverse calls to start from begginning for accurate simulation
+        foreach (var call in methodCalls.Reverse<MethodCallExpression>())
+        {
+            if (outerMethodNames.Contains(call.Method.Name))
+            {
+                continue;
+            }
+
+            switch (call.Method.Name)
+            {
+                case nameof(INavigationBuilder.AddSegment):
+                    {
+                        // Check for a generic type
+                        var segmentType = call.Method.GetGenericArguments().FirstOrDefault();
+
+                        if (segmentType is null)
+                        {
+                            throw new NotSupportedException("AddSegment is only supported with generic types: .AddSegment<T>()");
+                        }
+
+                        builder.AddSegment(segmentType.Name);
+
+                        break;
+                    }
+
+                case nameof(INavigationBuilder.WithParameters):
+                    {
+                        var argument = call.Arguments.FirstOrDefault() as ListInitExpression;
+
+                        var parameters = Expression.Lambda(argument)
+                            .Compile()
+                            .DynamicInvoke() as INavigationParameters;
+
+                        if (parameters is null)
+                        {
+                            throw new NotSupportedException($"Could not parse method call arguments as {nameof(INavigationParameters)}");
+                        }
+
+                        builder.WithParameters(parameters);
+
+                        break;
+                    }
+
+                case nameof(INavigationBuilder.AddParameter):
+                    {
+                        var key = call.Arguments.FirstOrDefault();
+
+                        break;
+                    }
+            }
+
+            // Simulate this call on the builder to get our expected params
+        }
+
+        return (builder.Uri, GetBuilderNavigationParameters(builder));
+    }
+
+    private static INavigationParameters? GetBuilderNavigationParameters(INavigationBuilder navigationBuilder)
+    {
+        var navParametersField = navigationBuilder.GetType()
+            .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+            .FirstOrDefault(f => f.FieldType == typeof(INavigationParameters));
+
+        if (navParametersField is null)
+        {
+            throw new InvalidOperationException("Unable to reflect & find _navigationParameters field");
+        }
+
+        var fieldValue = navParametersField.GetValue(navigationBuilder) as INavigationParameters;
+
+        return fieldValue;
     }
 
     private static Uri GetNavigationUriFrom(Expression expression)

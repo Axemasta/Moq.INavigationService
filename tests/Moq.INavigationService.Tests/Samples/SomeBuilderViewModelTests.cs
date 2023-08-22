@@ -18,6 +18,14 @@ public class SomeBuilderViewModel
             .NavigateAsync();
     }
 
+    public async Task NavigateToDeepLinkedPage()
+    {
+        await navigationService.CreateBuilder()
+            .AddSegment<HomePage>()
+            .AddSegment<HelloPage>()
+            .NavigateAsync();
+    }
+
     public async Task NavigateToNavigationHomePage()
     {
         await navigationService.CreateBuilder()
@@ -110,7 +118,26 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
 
         // Assert
         navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("HomePage"),
+            nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .NavigateAsync(),
+            Times.Once());
+    }
+
+    [Fact]
+    public async Task Verify_NavigateToDeepLinkedPage()
+    {
+        // Arrange
+
+        // Act
+        await Sut.NavigateToDeepLinkedPage();
+
+        // Assert
+        navigationService.VerifyNavigation(
+            nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddSegment<HelloPage>()
+                .NavigateAsync(),
             Times.Once());
     }
 
@@ -124,10 +151,13 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
 
         // Assert
         navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("HomePage", new NavigationParameters() // Note sut uses CreateBuilder api, but this is hard to mock here...
-            {
-                { "KeyOne", "Hello World" },
-            }),
+            nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .WithParameters(new NavigationParameters()
+                {
+                    { "KeyOne", "Hello World" },
+                })
+                .NavigateAsync(),
             Times.Once());
     }
 
