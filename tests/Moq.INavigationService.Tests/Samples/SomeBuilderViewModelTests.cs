@@ -34,7 +34,14 @@ public class SomeBuilderViewModel
             .NavigateAsync();
     }
 
-    public async Task NavigateToModalHomePage()
+    public async Task NavigateToModalHomePageViaSegment()
+    {
+        await navigationService.CreateBuilder()
+            .AddSegment<HomePage>(true)
+            .NavigateAsync();
+    }
+
+    public async Task NavigateToModalHomePageViaParameter()
     {
         await navigationService.CreateBuilder()
             .AddSegment<HomePage>()
@@ -72,12 +79,20 @@ public class SomeBuilderViewModel
             .NavigateAsync();
     }
 
-    public async Task NavigateToModalNavigationHomePage()
+    public async Task NavigateToModalFromParameterNavigationHome()
     {
         await navigationService.CreateBuilder()
             .AddNavigationPage()
             .AddSegment<HomePage>()
             .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
+            .NavigateAsync();
+    }
+
+    public async Task NavigateToModalFromSegmentNavigationHome()
+    {
+        await navigationService.CreateBuilder()
+            .AddNavigationPage()
+            .AddSegment<HomePage>(true)
             .NavigateAsync();
     }
 
@@ -214,16 +229,49 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
     }
 
     [Fact]
-    public async Task Verify_NavigateToModalHomePage()
+    public async Task Verify_NavigateToModalHomePageViaSegment()
     {
         // Arrange
 
         // Act
-        await Sut.NavigateToModalNavigationHomePage();
+        await Sut.NavigateToModalHomePageViaSegment();
 
         // Assert
         navigationService.VerifyNavigation(
             nav => navigationService.CreateBuilder()
+                .AddSegment<HomePage>(true)
+                .NavigateAsync(),
+            Times.Once());
+    }
+
+    [Fact]
+    public async Task Verify_NavigateToModalHomePageViaParameter()
+    {
+        // Arrange
+
+        // Act
+        await Sut.NavigateToModalHomePageViaParameter();
+
+        // Assert
+        navigationService.VerifyNavigation(
+            nav => navigationService.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
+                .NavigateAsync(),
+            Times.Once());
+    }
+
+    [Fact]
+    public async Task Verify_NavigateToModalFromParameterNavigationHomePage()
+    {
+        // Arrange
+
+        // Act
+        await Sut.NavigateToModalFromParameterNavigationHome();
+
+        // Assert
+        navigationService.VerifyNavigation(
+            nav => nav.CreateBuilder()
                 .AddNavigationPage()
                 .AddSegment<HomePage>()
                 .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
@@ -232,19 +280,18 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
     }
 
     [Fact]
-    public async Task Verify_NavigateToModalNavigationHomePage()
+    public async Task Verify_NavigateToModalFromSegmentNavigationHomePage()
     {
         // Arrange
 
         // Act
-        await Sut.NavigateToModalNavigationHomePage();
+        await Sut.NavigateToModalFromSegmentNavigationHome();
 
         // Assert
         navigationService.VerifyNavigation(
             nav => nav.CreateBuilder()
                 .AddNavigationPage()
-                .AddSegment<HomePage>()
-                .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
+                .AddSegment<HomePage>(true)
                 .NavigateAsync(),
             Times.Once());
     }

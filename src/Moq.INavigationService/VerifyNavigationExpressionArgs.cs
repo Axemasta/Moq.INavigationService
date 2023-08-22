@@ -129,7 +129,20 @@ internal class VerifyNavigationExpressionArgs
                             throw new NotSupportedException("AddSegment is only supported with generic types: .AddSegment<T>()");
                         }
 
-                        builder.AddSegment(segmentType.Name);
+                        if (call.Arguments.Count == 2)
+                        {
+                            var useModalArgument = call.Arguments[1];
+
+                            var useModal = useModalArgument.GetExpressionValue<bool>();
+
+                            builder.AddSegment(segmentType.Name, useModal);
+                        }
+                        else
+                        {
+                            builder.AddSegment(segmentType.Name);
+                        }
+
+                        
 
                         break;
                     }
