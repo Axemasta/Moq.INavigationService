@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-
 namespace Moq;
 
 internal static class ExpressionInspector
@@ -31,5 +30,7 @@ internal static class ExpressionInspector
     }
 
     internal static Expression GetArgExpressionOf<T>(Expression expression)
-        => GetArgExpression(expression, c => c.Type == typeof(T));
+    {
+        return GetArgExpression(expression, c => c.Type == typeof(T));
+    }
 }

@@ -1,5 +1,4 @@
 ﻿using Moq.Tests.Samples.Pages;
-
 namespace Moq.Tests.Samples;
 
 public class SomeBuilderViewModel
@@ -51,9 +50,11 @@ public class SomeBuilderViewModel
 
     public async Task NavigateToHomePageWithParameters()
     {
-        var navParams = new NavigationParameters()
+        var navParams = new NavigationParameters
         {
-            { "KeyOne", "Hello World" },
+            {
+                "KeyOne", "Hello World"
+            },
         };
 
         await navigationService.CreateBuilder()
@@ -116,12 +117,11 @@ public class SomeBuilderViewModel
     {
         await navigationService.CreateBuilder()
             .AddTabbedSegment(tabbed =>
-                tabbed.CreateTab((b) => b.AddNavigationPage().AddSegment<HomePage>())
-                .CreateTab((b) => b.AddNavigationPage().AddSegment<HelloPage>()))
+                tabbed.CreateTab(b => b.AddNavigationPage().AddSegment<HomePage>())
+                    .CreateTab(b => b.AddNavigationPage().AddSegment<HelloPage>()))
             .NavigateAsync();
     }
 }
-
 
 public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
 {
@@ -188,9 +188,11 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
         navigationService.VerifyNavigation(
             nav => nav.CreateBuilder()
                 .AddSegment<HomePage>()
-                .WithParameters(new NavigationParameters()
+                .WithParameters(new NavigationParameters
                 {
-                    { "KeyOne", "Hello World" },
+                    {
+                        "KeyOne", "Hello World"
+                    },
                 })
                 .NavigateAsync(),
             Times.Once());
@@ -357,8 +359,8 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
             navigationService.VerifyNavigation(
                 nav => nav.CreateBuilder()
                     .AddTabbedSegment(tabbed =>
-                        tabbed.CreateTab((b) => b.AddNavigationPage().AddSegment<HomePage>())
-                            .CreateTab((b) => b.AddNavigationPage().AddSegment<HelloPage>()))
+                        tabbed.CreateTab(b => b.AddNavigationPage().AddSegment<HomePage>())
+                            .CreateTab(b => b.AddNavigationPage().AddSegment<HelloPage>()))
                     .NavigateAsync(),
                 Times.Once());
         });

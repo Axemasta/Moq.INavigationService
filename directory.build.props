@@ -1,5 +1,5 @@
 <Project>
- <PropertyGroup>
-   <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
- </PropertyGroup>
+  <PropertyGroup>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
 </Project>

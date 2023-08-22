@@ -1,24 +1,20 @@
 ﻿using Prism.Common;
-using Prism.Navigation.Builder;
-
 namespace Moq;
 
 public class MockNavigationService : Mock<INavigationService>, INavigationService, IRegistryAware
 {
-    private IViewRegistry viewRegistry;
-
     public bool UsingNavigationBuilder { get; set; }
 
     public MockNavigationService()
     {
-        viewRegistry = new MockViewRegistry();
+        Registry = new MockViewRegistry();
 
         var mockResult = new Mock<INavigationResult>();
 
         mockResult.SetupGet(m => m.Success)
             .Returns(false);
 
-        this.Setup(m => m.NavigateAsync(It.IsAny<Uri>(), It.IsAny<INavigationParameters>()))
+        Setup(m => m.NavigateAsync(It.IsAny<Uri>(), It.IsAny<INavigationParameters>()))
             .ReturnsAsync(mockResult.Object);
     }
 
@@ -48,20 +44,20 @@ public class MockNavigationService : Mock<INavigationService>, INavigationServic
 
     #region IRegistryAware
 
-    public IViewRegistry Registry => viewRegistry;
+    public IViewRegistry Registry { get; }
 
     #endregion IRegistryAware
 
     private class MockViewRegistry : IViewRegistry
     {
-        public IEnumerable<ViewRegistration> Registrations { get; } = new List<ViewRegistration>()
+        public IEnumerable<ViewRegistration> Registrations { get; } = new List<ViewRegistration>
         {
-            new ViewRegistration()
+            new ViewRegistration
             {
                 // Otherwise we run into this exception:
                 // https://github.com/PrismLibrary/Prism/blob/d8d47b8465038c18503761aaba6a68a9bdf35a0c/src/Maui/Prism.Maui/Navigation/Builder/NavigationBuilderExtensions.cs#L88C16-L88C16
                 View = typeof(NavigationPage),
-            }
+            },
         };
 
         public object CreateView(IContainerProvider container, string name)

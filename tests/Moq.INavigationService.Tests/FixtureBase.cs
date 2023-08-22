@@ -2,7 +2,7 @@
 
 public abstract class FixtureBase<TSut>
 {
-    private Lazy<TSut> SutLazy { get; init; }
+    private Lazy<TSut> SutLazy { get; }
 
     protected TSut Sut => SutLazy.Value;
 

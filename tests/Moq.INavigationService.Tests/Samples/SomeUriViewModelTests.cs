@@ -2,17 +2,17 @@
 
 public class SomeUriViewModel
 {
-	private readonly INavigationService navigationService;
+    private readonly INavigationService navigationService;
 
-	public SomeUriViewModel(INavigationService navigationService)
-	{
-		this.navigationService = navigationService;
-	}
+    public SomeUriViewModel(INavigationService navigationService)
+    {
+        this.navigationService = navigationService;
+    }
 
-	public async Task NavigateToHomePage()
-	{
-		await navigationService.NavigateAsync("HomePage");
-	}
+    public async Task NavigateToHomePage()
+    {
+        await navigationService.NavigateAsync("HomePage");
+    }
 
     public async Task NavigateToHomePageViaUri()
     {
@@ -23,9 +23,11 @@ public class SomeUriViewModel
 
     public async Task NavigateToHomePageWithParameters()
     {
-        var navParams = new NavigationParameters()
+        var navParams = new NavigationParameters
         {
-            { "KeyOne", "Hello World" },
+            {
+                "KeyOne", "Hello World"
+            },
         };
 
         await navigationService.NavigateAsync("HomePage", navParams);
@@ -38,17 +40,21 @@ public class SomeUriViewModel
 
     public async Task NavigateToModalHomePage()
     {
-        await navigationService.NavigateAsync("HomePage", new NavigationParameters()
+        await navigationService.NavigateAsync("HomePage", new NavigationParameters
         {
-            { KnownNavigationParameters.UseModalNavigation, true },
+            {
+                KnownNavigationParameters.UseModalNavigation, true
+            },
         });
     }
 
     public async Task NavigateToModalNavigationHomePage()
     {
-        await navigationService.NavigateAsync("NavigationPage/HomePage", new NavigationParameters()
+        await navigationService.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
         {
-            { KnownNavigationParameters.UseModalNavigation, true },
+            {
+                KnownNavigationParameters.UseModalNavigation, true
+            },
         });
     }
 
@@ -126,9 +132,11 @@ public class SomeUriViewModelTests : FixtureBase<SomeUriViewModel>
 
         // Assert
         navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("HomePage", new NavigationParameters()
+            nav => nav.NavigateAsync("HomePage", new NavigationParameters
             {
-                { "KeyOne", "Hello World" },
+                {
+                    "KeyOne", "Hello World"
+                },
             }),
             Times.Once());
     }
@@ -143,9 +151,11 @@ public class SomeUriViewModelTests : FixtureBase<SomeUriViewModel>
 
         // Assert
         navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("NavigationPage/HomePage", new NavigationParameters()
+            nav => nav.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
             {
-                { KnownNavigationParameters.UseModalNavigation, true },
+                {
+                    KnownNavigationParameters.UseModalNavigation, true
+                },
             }),
             Times.Once());
     }
@@ -160,9 +170,11 @@ public class SomeUriViewModelTests : FixtureBase<SomeUriViewModel>
 
         // Assert
         navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("NavigationPage/HomePage", new NavigationParameters()
+            nav => nav.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
             {
-                { KnownNavigationParameters.UseModalNavigation, true },
+                {
+                    KnownNavigationParameters.UseModalNavigation, true
+                },
             }), Times.Once());
     }
 
