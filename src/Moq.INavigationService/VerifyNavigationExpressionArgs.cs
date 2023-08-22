@@ -97,9 +97,9 @@ internal class VerifyNavigationExpressionArgs
 
         var methodCalls = GetMethodCallExpressionHierarchy(methodCall);
 
-        var mockNavigationService = new Mock<INavigationService>();
+        var mockNavigationService = new MockNavigationService();
 
-        var builder = CreateNavigationBuilder(mockNavigationService.Object);
+        var builder = CreateNavigationBuilder(mockNavigationService);
 
         var outerMethodNames = new List<string>()
         {
@@ -112,9 +112,11 @@ internal class VerifyNavigationExpressionArgs
         {
             if (outerMethodNames.Contains(call.Method.Name))
             {
+                // We don't care about simulating CreateBuilder() or NavigateAsync()
                 continue;
             }
 
+            // Simulate this call on the builder to get our expected params
             switch (call.Method.Name)
             {
                 case nameof(INavigationBuilder.AddSegment):
@@ -167,9 +169,13 @@ internal class VerifyNavigationExpressionArgs
 
                         break;
                     }
-            }
 
-            // Simulate this call on the builder to get our expected params
+                case nameof(NavigationBuilderExtensions.AddNavigationPage):
+                    {
+                        builder.AddNavigationPage();
+                        break;
+                    }
+            }
         }
 
         return (builder.Uri, GetBuilderNavigationParameters(builder));
