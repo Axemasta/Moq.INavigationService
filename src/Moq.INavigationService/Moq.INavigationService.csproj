@@ -5,16 +5,33 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UseMaui>true</UseMaui>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="NuGet">
+    <AssemblyName>Moq.INavigationService</AssemblyName>
+    <RootNamespace>Moq</RootNamespace>
+    <PackageId>Moq.INavigationService</PackageId>
+    <Summary>Testing library for Prism.Maui's INavigationService using Moq.</Summary>
+    <PackageTag>prism,maui,prism.maui,moq,inavigationservice</PackageTag>
+    <Title>Moq.INavigationService</Title>
+    <Description>Testing library for Prism.Maui's INavigationService using Moq.</Description>
+    <Authors>Axemasta</Authors>
+    <Owners>Axemasta</Owners>
+    <NeutralLanguage>en</NeutralLanguage>
+    <RepositoryUrl>https://github.com/Axemasta/Moq.INavigationService</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Axemasta/Moq.INavigationService</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.20.69" />
     <PackageReference Include="Prism.Maui" Version="8.1.273-pre" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="Exceptions\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
+
 </Project>

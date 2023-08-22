@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moq.INavigationService", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6A56D711-2216-460E-B7C5-AE0A97329786}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
 		directory.build.props = directory.build.props
 		global.json = global.json
+		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{30AB869E-442D-4AF2-A020-9BAD5C15A8C6}"
