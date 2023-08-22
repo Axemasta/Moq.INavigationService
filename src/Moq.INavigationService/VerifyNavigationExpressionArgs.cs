@@ -142,8 +142,6 @@ internal class VerifyNavigationExpressionArgs
                             builder.AddSegment(segmentType.Name);
                         }
 
-                        
-
                         break;
                     }
 
@@ -187,6 +185,11 @@ internal class VerifyNavigationExpressionArgs
                     {
                         builder.AddNavigationPage();
                         break;
+                    }
+
+                case nameof(INavigationBuilder.AddTabbedSegment):
+                    {
+                        throw new NotSupportedException("This api has not been mapped and is not supported");
                     }
             }
         }

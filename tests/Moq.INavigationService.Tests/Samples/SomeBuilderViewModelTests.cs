@@ -114,8 +114,11 @@ public class SomeBuilderViewModel
 
     public async Task NavigateToTabbedPageWithManyTabsAndNavigationPages()
     {
-        throw new NotImplementedException("I need to workout how to make this one!");
-        await navigationService.NavigateAsync("TabbedPage?createTab=NavigationPage|HomePage&createTab=NavigationPage|HelloPage");
+        await navigationService.CreateBuilder()
+            .AddTabbedSegment(tabbed =>
+                tabbed.CreateTab((b) => b.AddNavigationPage().AddSegment<HomePage>())
+                .CreateTab((b) => b.AddNavigationPage().AddSegment<HelloPage>()))
+            .NavigateAsync();
     }
 }
 
@@ -305,12 +308,17 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
         await Sut.NavigateToTabbedPageWithHomePageTab();
 
         // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.CreateBuilder()
-                .AddTabbedSegment(tabbed =>
-                    tabbed.CreateTab<HomePage>())
-                .NavigateAsync(), // Note sut uses CreateBuilder api, but this is hard to mock here...
-            Times.Once());
+        var ex = Record.Exception(() =>
+        {
+            navigationService.VerifyNavigation(
+                nav => nav.CreateBuilder()
+                    .AddTabbedSegment(tabbed =>
+                        tabbed.CreateTab<HomePage>())
+                    .NavigateAsync(),
+                Times.Once());
+        });
+
+        Assert.IsType<NotSupportedException>(ex);
     }
 
     [Fact]
@@ -322,15 +330,20 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
         await Sut.NavigateToTabbedPageWithManyTabs();
 
         // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.CreateBuilder()
-                .AddTabbedSegment(tabbed =>
-                    tabbed.CreateTab<HomePage>().CreateTab<HelloPage>())
-                .NavigateAsync(), // Note sut uses CreateBuilder api, but this is hard to mock here...
-            Times.Once());
+        var ex = Record.Exception(() =>
+        {
+            navigationService.VerifyNavigation(
+                nav => nav.CreateBuilder()
+                    .AddTabbedSegment(tabbed =>
+                        tabbed.CreateTab<HomePage>().CreateTab<HelloPage>())
+                    .NavigateAsync(),
+                Times.Once());
+        });
+
+        Assert.IsType<NotSupportedException>(ex);
     }
 
-    [Fact(Skip = "Not mocked")]
+    [Fact]
     public async Task Verify_NavigateToTabbedPageWithManyTabsAndNavigationPages()
     {
         // Arrange
@@ -339,9 +352,18 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
         await Sut.NavigateToTabbedPageWithManyTabsAndNavigationPages();
 
         // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("TabbedPage?createTab=NavigationPage|HomePage&createTab=NavigationPage|HelloPage"), // Note sut uses CreateBuilder api, but this is hard to mock here...
-            Times.Once());
+        var ex = Record.Exception(() =>
+        {
+            navigationService.VerifyNavigation(
+                nav => nav.CreateBuilder()
+                    .AddTabbedSegment(tabbed =>
+                        tabbed.CreateTab((b) => b.AddNavigationPage().AddSegment<HomePage>())
+                            .CreateTab((b) => b.AddNavigationPage().AddSegment<HelloPage>()))
+                    .NavigateAsync(),
+                Times.Once());
+        });
+
+        Assert.IsType<NotSupportedException>(ex);
     }
 
     #endregion Tests

@@ -71,6 +71,10 @@ public static class VerifyNavigationExtensions
                 throw new VerifyNavigationException(BuildExceptionMessage(mex, expression), mex);
             }
         }
+        catch (NotSupportedException)
+        {
+            throw;
+        }
         catch (VerifyNavigationException)
         {
             throw;
