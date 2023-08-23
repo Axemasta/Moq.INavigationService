@@ -177,6 +177,23 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
     }
 
     [Fact]
+    public async Task Verify_NavigateToNavigationHomePage()
+    {
+        // Arrange
+
+        // Act
+        await Sut.NavigateToNavigationHomePage();
+
+        // Assert
+        navigationService.VerifyNavigation(
+            nav => nav.CreateBuilder()
+                .AddNavigationPage()
+                .AddSegment<HomePage>()
+                .NavigateAsync(),
+            Times.Once());
+    }
+
+    [Fact]
     public async Task Verify_NavigateToHomePageWithParameters()
     {
         // Arrange

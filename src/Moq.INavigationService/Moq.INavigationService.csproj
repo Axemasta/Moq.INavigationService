@@ -13,7 +13,7 @@
     <RootNamespace>Moq</RootNamespace>
     <PackageId>Axemasta.Moq.INavigationService</PackageId>
     <Summary>Testing library for Prism.Maui's INavigationService using Moq.</Summary>
-    <PackageTag>prism,maui,prism.maui,moq,inavigationservice</PackageTag>
+    <PackageTags>prism,maui,prism.maui,moq,inavigationservice</PackageTags>
     <Title>Moq.INavigationService</Title>
     <Description>Testing library for Prism.Maui's INavigationService using Moq.</Description>
     <Authors>Axemasta</Authors>
@@ -23,7 +23,15 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/Axemasta/Moq.INavigationService</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.20.69"/>
