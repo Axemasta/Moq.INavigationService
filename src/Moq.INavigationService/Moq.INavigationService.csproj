@@ -11,7 +11,7 @@
   <PropertyGroup Label="NuGet">
     <AssemblyName>Moq.INavigationService</AssemblyName>
     <RootNamespace>Moq</RootNamespace>
-    <PackageId>Moq.INavigationService</PackageId>
+    <PackageId>Axemasta.Moq.INavigationService</PackageId>
     <Summary>Testing library for Prism.Maui's INavigationService using Moq.</Summary>
     <PackageTag>prism,maui,prism.maui,moq,inavigationservice</PackageTag>
     <Title>Moq.INavigationService</Title>

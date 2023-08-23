@@ -31,7 +31,7 @@ jobs:
     - name: Publish Code Coverage To PR
       uses: 5monkeys/cobertura-action@v13
       with:
-        path: tests/Mocale.UnitTests/TestResults/*/coverage.cobertura.xml
+        path: tests/Moq.INavigationService.Tests/TestResults/*/coverage.cobertura.xml
         minimum_coverage: 5
         show_line: true
         show_branch: true
@@ -60,8 +60,8 @@ jobs:
       uses: dawidd6/action-download-artifact@v2
       with:
         name: ${{ inputs.artifact-name }}
-        repo: Axemasta/Mocale
-        workflow: mocale-ci.yml
+        repo: Axemasta/Moq.INavigationService
+        workflow: ci.yml
         path: Artifacts/
         search_artifacts: true
 
@@ -70,7 +70,7 @@ jobs:
       working-directory: Artifacts/
       id: process-version
       run: |
-        $Artifact = Get-ChildItem -Recurse | Where-Object { $_.Name.EndsWith('.nupkg') -and $_.Name.StartsWith('Mocale.') } | Select-Object -First 1
+        $Artifact = Get-ChildItem -Recurse | Where-Object { $_.Name.EndsWith('.nupkg') -and $_.Name.StartsWith('Axemasta.Moq.INavigationService.') } | Select-Object -First 1
         $ArtifactName = $Artifact.Name
         $Pattern = '\b\d+\.\d+\.\d+(-\w+)?\b'
 
