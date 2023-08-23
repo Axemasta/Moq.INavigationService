@@ -17,9 +17,9 @@ internal static class ExpressionInspector
             return cexp.Value as T ?? throw new InvalidCastException($"Unable to cast {cexp.Value} as {nameof(T)}");
         }
 
-        var val = Expression.Lambda(arg).Compile().DynamicInvoke();
+        var val = arg.GetExpressionValue<T>();
 
-        return val as T ?? throw new InvalidCastException($"Unable to cast {val} as {nameof(T)}");
+        return val ?? throw new InvalidCastException($"Unable to cast {val} as {nameof(T)}");
     }
 
     internal static Expression GetArgExpression(Expression expression, Func<Expression, bool> argPredicate)
