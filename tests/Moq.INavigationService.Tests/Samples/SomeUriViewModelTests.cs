@@ -220,5 +220,23 @@ public class SomeUriViewModelTests : FixtureBase<SomeUriViewModel>
             Times.Once());
     }
 
+    [Fact]
+    public async Task Verify_WhenVerificationDoesntMatchSetup_ShouldThrow()
+    {
+        // Arrange
+        await Sut.NavigateToHomePage();
+
+        // Act
+        var ex = Record.Exception(() =>
+        {
+            navigationService.VerifyNavigation(
+                nav => nav.NavigateAsync("NotTheHomePage"),
+                Times.Once());
+        });
+
+        // Assert
+        Assert.IsType<VerifyNavigationException>(ex);
+    }
+
     #endregion Tests
 }

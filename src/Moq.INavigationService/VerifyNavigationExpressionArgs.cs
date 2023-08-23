@@ -124,12 +124,19 @@ internal class VerifyNavigationExpressionArgs
                     // Check for a generic type
                     var segmentType = call.Method.GetGenericArguments().FirstOrDefault();
 
-                    if (segmentType is null)
-                    {
-                        throw new NotSupportedException("AddSegment is only supported with generic types: .AddSegment<T>()");
-                    }
+                    var usedGenericAddSegment = segmentType is not null;
 
-                    if (call.Arguments.Count == 2)
+                    if (!usedGenericAddSegment && call.Arguments.Count == 3)
+                    {
+                        var destinationArgument = call.Arguments[1];
+                        var useModalArgument = call.Arguments[2];
+
+                        var useModal = useModalArgument.GetExpressionValue<bool?>();
+                        var destination = destinationArgument.GetExpressionValue<string>();
+
+                        builder.AddSegment(destination, useModal);
+                    }
+                    else if (call.Arguments.Count == 2)
                     {
                         var useModalArgument = call.Arguments[1];
 

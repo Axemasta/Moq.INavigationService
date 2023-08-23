@@ -368,5 +368,25 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
         Assert.IsType<NotSupportedException>(ex);
     }
 
+    [Fact]
+    public async Task Verify_WhenVerificationDoesntMatchSetup_ShouldThrow()
+    {
+        // Arrange
+        await Sut.NavigateToHomePage();
+
+        // Act
+        var ex = Record.Exception(() =>
+        {
+            navigationService.VerifyNavigation(
+                nav => nav.CreateBuilder()
+                    .AddSegment("ThisIsntTheHelloPage", false)
+                    .NavigateAsync(),
+                Times.Once());
+        });
+
+        // Assert
+        Assert.IsType<VerifyNavigationException>(ex);
+    }
+
     #endregion Tests
 }
