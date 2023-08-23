@@ -10,55 +10,7 @@ on:
     branches: [ "main", "actions" ]
 
 jobs:
-  test:
-    runs-on: windows-latest
-    if: github.event_name == 'pull_request'
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # https://github.com/dotnet/Nerdbank.GitVersioning/blob/main/doc/cloudbuild.md
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore
-      - name: Test
-        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
-      - name: Publish Code Coverage To PR
-        uses: 5monkeys/cobertura-action@v13
-        with:
-          path: tests/Moq.INavigationService.Tests/TestResults/*/coverage.cobertura.xml
-          minimum_coverage: 5
-          show_line: true
-          show_branch: true
-          show_missing: true
-
-  build:
-    runs-on: windows-latest
-    if: github.event_name != 'pull_request'
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 # https://github.com/dotnet/Nerdbank.GitVersioning/blob/main/doc/cloudbuild.md
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 7.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: drop
-        path: src/**/*.nupkg
-
   release:
-    needs: build
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     env:
