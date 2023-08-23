@@ -6,7 +6,16 @@ This package is directly inspired by, and uses the design pattern of [Moq.ILogge
 
 [![Moq.ILogger CI](https://github.com/Axemasta/Moq.INavigationService/actions/workflows/ci.yml/badge.svg)](https://github.com/Axemasta/Moq.INavigationService/actions/workflows/ci.yml) [![NuGet Shield](https://img.shields.io/nuget/v/Axemasta.Moq.INavigationService)](https://www.nuget.org/packages/Axemasta.Moq.INavigationService/)
 
+> If you are using a preview version of Prism 9 that is either from Sponsor Connect or self hosted, you will likely have issues using this package from NuGet. My recommendation is to pull the source code and reference it locally to avoid any issues.
+
 ## Usage
+
+A `Mock<INavigationService` object isn't enough for the current prism implementation, there is extra setup required. You must use the `MockNavigationService` object in your tests and pass it directly (it implemented `INavigationService`).
+
+```csharp
+var mockNavigationService = new MockNavigationService();
+var sut = new FooViewModel(mockNavigationService);
+```
 
 To verify navigation in your tests, use the `VerifyNavigation` api & provide the expression you wish to verify:
 
