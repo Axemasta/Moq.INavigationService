@@ -72,7 +72,7 @@ jobs:
       id: download-artifact
       uses: dawidd6/action-download-artifact@v2
       with:
-        name: ${{ inputs.artifact-name }}
+        name: drop
         repo: Axemasta/Moq.INavigationService
         workflow: ci.yml
         path: Artifacts/
@@ -125,16 +125,16 @@ jobs:
     - uses: ncipollo/release-action@main
       name: Create Release
       with:
-        artifacts: ${{ inputs.artifacts }}
-        artifactErrorsFailBuild: ${{ inputs.artifactErrorsFailBuild }}
+        artifacts: Artifacts/**/*.nupkg
+        artifactErrorsFailBuild: true
         draft: true
         generateReleaseNotes: true
         name: ${{ env.RELEASE_TITLE }}
         tag: ${{ env.VERSION_NAME }}
         prerelease: ${{ env.IS_PRERELEASE }}
-        body: ${{ inputs.release-notes }}
+        body: "TODO"
 
     - name: Publish NuGet
-      run: nuget push ${{ inputs.artifacts }} -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{ secrets.NUGET_API_KEY }} -SkipDuplicate
+      run: nuget push Artifacts/**/*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{ secrets.NUGET_API_KEY }} -SkipDuplicate
 
 
