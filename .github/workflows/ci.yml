@@ -7,7 +7,7 @@ on:
       - 'tests/**'
       - 'src/**'
   push:
-    branches: [ "main" ]
+    branches: [ "main", "actions" ]
     paths:
       - 'src/**'
       - 'version.json'
@@ -46,7 +46,7 @@ jobs:
         name: drop
         path: src/**/*.nupkg
       if: github.event_name != 'pull_request'
-      
+
   release:
     needs: build-test
     runs-on: ubuntu-latest
@@ -126,5 +126,5 @@ jobs:
 
     - name: Publish NuGet
       run: nuget push ${{ inputs.artifacts }} -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{ secrets.NUGET_API_KEY }} -SkipDuplicate
-      
-    
+
+
