@@ -156,9 +156,7 @@ internal class VerifyNavigationExpressionArgs
                 {
                     var argument = call.Arguments.FirstOrDefault() as ListInitExpression;
 
-                    var parameters = Expression.Lambda(argument)
-                        .Compile()
-                        .DynamicInvoke() as INavigationParameters;
+                    var parameters = argument.GetExpressionValue<INavigationParameters>();
 
                     if (parameters is null)
                     {
@@ -175,13 +173,8 @@ internal class VerifyNavigationExpressionArgs
                     var keyArgument = call.Arguments[0];
                     var valueArgument = call.Arguments[1];
 
-                    var keyValue = Expression.Lambda(keyArgument)
-                        .Compile()
-                        .DynamicInvoke() as string;
-
-                    var valueValue = Expression.Lambda(valueArgument)
-                        .Compile()
-                        .DynamicInvoke();
+                    var keyValue = keyArgument.GetExpressionValue<string>();
+                    var valueValue = valueArgument.GetExpressionValue<object?>();
 
                     builder.AddParameter(keyValue, valueValue);
 
@@ -190,7 +183,21 @@ internal class VerifyNavigationExpressionArgs
 
                 case nameof(NavigationBuilderExtensions.AddNavigationPage):
                 {
-                    builder.AddNavigationPage();
+                    if (call.Arguments.Count == 1)
+                    {
+                        builder.AddNavigationPage();
+                    }
+                    else if (call.Arguments.Count == 2)
+                    {
+                        var useModalArgument = call.Arguments[1];
+                        var useModal = useModalArgument.GetExpressionValue<bool>();
+
+                        builder.AddNavigationPage(useModal);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException("This pathway has not been implemented yet, please raise an issue with your navigation code");
+                    }
                     break;
                 }
 
