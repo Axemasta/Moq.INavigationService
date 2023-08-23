@@ -8,6 +8,9 @@ on:
       - 'src/**'
   push:
     branches: [ "main", "actions" ]
+    paths:
+      - 'src/**'
+      - 'version.json'
 
 jobs:
   test:
