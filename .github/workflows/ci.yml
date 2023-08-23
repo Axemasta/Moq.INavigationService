@@ -70,12 +70,10 @@ jobs:
 
     - name: Download artifacts
       id: download-artifact
-      uses: dawidd6/action-download-artifact@v2
+      uses: actions/download-artifact@v2.1.1
       with:
         name: drop
-        repo: Axemasta/Moq.INavigationService
         path: Artifacts/
-        search_artifacts: true
 
     - name: Process NuGet Version
       shell: pwsh
