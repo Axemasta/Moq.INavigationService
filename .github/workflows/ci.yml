@@ -26,7 +26,6 @@ jobs:
       with:
         name: drop
         repo: Axemasta/Moq.INavigationService
-        workflow: ci.yml
         path: Artifacts/
         search_artifacts: true
 
