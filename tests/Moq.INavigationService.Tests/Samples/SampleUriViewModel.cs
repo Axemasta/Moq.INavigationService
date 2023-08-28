@@ -37,6 +37,20 @@ public class SampleUriViewModel
         return await navigationService.NavigateAsync("HomePage", navParams);
     }
 
+    public async Task<INavigationResult> NavigateToHomePageWithParametersViaUri()
+    {
+        var uri = new Uri("HomePage", UriKind.Relative);
+
+        var navParams = new NavigationParameters
+        {
+            {
+                "KeyOne", "Hello World"
+            },
+        };
+
+        return await navigationService.NavigateAsync(uri, navParams);
+    }
+
     public async Task<INavigationResult> NavigateToNavigationHomePage()
     {
         return await navigationService.NavigateAsync("NavigationPage/HomePage");

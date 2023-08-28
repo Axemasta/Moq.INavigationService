@@ -28,6 +28,11 @@ public class SetupBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
         // Arrange
         var expectedNavigationResult = new NavigationResult();
 
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
+
         // Act
         var result = await Sut.NavigateToHomePage();
 

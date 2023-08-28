@@ -23,16 +23,159 @@ public class SetupUriViewModelTests : FixtureBase<SampleUriViewModel>
     #region Tests
 
     [Fact]
-    public async Task Setup_NavigateToHomePage()
+    public async Task Setup_NavigateToHomePageWhenSetupIsMatched_ShouldReturnSetup()
     {
         // Arrange
         var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation("HomePage")
+            .ReturnsAsync(expectedNavigationResult);
 
         // Act
         var result = await Sut.NavigateToHomePage();
 
         // Assert
         Assert.Equal(expectedNavigationResult, result);
+    }
+
+    [Fact]
+    public async Task Setup_NavigateToHomePageWhenSetupIsNotMatched_ShouldReturnNull()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation("NotTheHomePage")
+            .ReturnsAsync(expectedNavigationResult);
+
+        // Act
+        var result = await Sut.NavigateToHomePage();
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task Setup_NavigateToHomePageViaUriWhenSetupIsMatched_ShouldReturnSetup()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(new Uri("HomePage", UriKind.Relative))
+            .ReturnsAsync(expectedNavigationResult);
+
+        // Act
+        var result = await Sut.NavigateToHomePageViaUri();
+
+        // Assert
+        Assert.Equal(expectedNavigationResult, result);
+    }
+
+    [Fact]
+    public async Task Setup_NavigateToHomePageViaUriWhenSetupIsNotMatched_ShouldReturnNull()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(new Uri("SomewhereElse/Entirely", UriKind.Relative))
+            .ReturnsAsync(expectedNavigationResult);
+
+        // Act
+        var result = await Sut.NavigateToHomePageViaUri();
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task Setup_NavigateToHomePageWithParametersWhenSetupIsMatched_ShouldReturnSetup()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        var correctParameters = new NavigationParameters
+        {
+            {
+                "KeyOne", "Hello World"
+            },
+        };
+
+        navigationService.SetupNavigation("HomePage", correctParameters)
+            .ReturnsAsync(expectedNavigationResult);
+
+        // Act
+        var result = await Sut.NavigateToHomePageWithParameters();
+
+        // Assert
+        Assert.Equal(expectedNavigationResult, result);
+    }
+
+    [Fact]
+    public async Task Setup_NavigateToHomePageWithParametersWhenSetupIsNotMatched_ShouldReturnNull()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        var incorrectParameters = new NavigationParameters
+        {
+            {
+                "KeyTwo", 139478
+            },
+        };
+
+        navigationService.SetupNavigation("HomePage", incorrectParameters)
+            .ReturnsAsync(expectedNavigationResult);
+
+        // Act
+        var result = await Sut.NavigateToHomePage();
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task Setup_NavigateToHomePageWithParametersViaUriWhenSetupIsMatched_ShouldReturnSetup()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        var correctParameters = new NavigationParameters
+        {
+            {
+                "KeyOne", "Hello World"
+            },
+        };
+
+        navigationService.SetupNavigation(new Uri("HomePage", UriKind.Relative), correctParameters)
+            .ReturnsAsync(expectedNavigationResult);
+
+        // Act
+        var result = await Sut.NavigateToHomePageWithParametersViaUri();
+
+        // Assert
+        Assert.Equal(expectedNavigationResult, result);
+    }
+
+    [Fact]
+    public async Task Setup_NavigateToHomePageWithParametersViaUriWhenSetupIsNotMatched_ShouldReturnNull()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        var incorrectParameters = new NavigationParameters
+        {
+            {
+                "KeyTwo", 139478
+            },
+        };
+
+        navigationService.SetupNavigation(new Uri("SomewhereElse/Entirely", UriKind.Relative), incorrectParameters)
+            .ReturnsAsync(expectedNavigationResult);
+
+        // Act
+        var result = await Sut.NavigateToHomePageWithParametersViaUri();
+
+        // Assert
+        Assert.Null(result);
     }
 
     #endregion Tests
