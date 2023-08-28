@@ -25,18 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Samples\" />
-    <None Remove="Properties\" />
-    <None Remove="Samples\Pages\" />
-    <None Remove="TestHelpers\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Samples\" />
-    <Folder Include="Properties\" />
-    <Folder Include="Samples\Pages\" />
-    <Folder Include="TestHelpers\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Moq.INavigationService\Moq.INavigationService.csproj" />
   </ItemGroup>
+  
 </Project>
