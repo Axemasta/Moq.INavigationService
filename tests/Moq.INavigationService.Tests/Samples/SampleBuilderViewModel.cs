@@ -6,11 +6,11 @@ namespace Moq.Tests;
  * Test viewmodel using the uri based navigation api
  */
 
-public class VerifyBuilderViewModel
+public class SampleBuilderViewModel
 {
     private readonly INavigationService navigationService;
 
-    public VerifyBuilderViewModel(INavigationService navigationService)
+    public SampleBuilderViewModel(INavigationService navigationService)
     {
         this.navigationService = navigationService;
     }

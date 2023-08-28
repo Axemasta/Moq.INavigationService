@@ -2,7 +2,7 @@ using Moq.Tests.Samples;
 
 namespace Moq.Tests;
 
-public class VerifyBuilderViewModelTests : FixtureBase<VerifyBuilderViewModel>
+public class VerifyBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
 {
     #region Setup
 
@@ -15,9 +15,9 @@ public class VerifyBuilderViewModelTests : FixtureBase<VerifyBuilderViewModel>
         navigationService.SetupAllNavigationReturns(true);
     }
 
-    public override VerifyBuilderViewModel CreateSystemUnderTest()
+    public override SampleBuilderViewModel CreateSystemUnderTest()
     {
-        return new VerifyBuilderViewModel(navigationService);
+        return new SampleBuilderViewModel(navigationService);
     }
 
     #endregion Setup
