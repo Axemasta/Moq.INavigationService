@@ -10,24 +10,24 @@ public class SomeBuilderViewModel
         this.navigationService = navigationService;
     }
 
-    public async Task NavigateToHomePage()
+    public async Task<INavigationResult> NavigateToHomePage()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddSegment<HomePage>()
             .NavigateAsync();
     }
 
-    public async Task NavigateToDeepLinkedPage()
+    public async Task<INavigationResult> NavigateToDeepLinkedPage()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddSegment<HomePage>()
             .AddSegment<HelloPage>()
             .NavigateAsync();
     }
 
-    public async Task NavigateToNavigationHomePage()
+    public async Task<INavigationResult> NavigateToNavigationHomePage()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddNavigationPage()
             .AddSegment<HomePage>()
             .NavigateAsync();
@@ -40,15 +40,15 @@ public class SomeBuilderViewModel
             .NavigateAsync();
     }
 
-    public async Task NavigateToModalHomePageViaParameter()
+    public async Task<INavigationResult> NavigateToModalHomePageViaParameter()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddSegment<HomePage>()
             .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
             .NavigateAsync();
     }
 
-    public async Task NavigateToHomePageWithParameters()
+    public async Task<INavigationResult> NavigateToHomePageWithParameters()
     {
         var navParams = new NavigationParameters
         {
@@ -57,73 +57,73 @@ public class SomeBuilderViewModel
             },
         };
 
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddSegment<HomePage>()
             .WithParameters(navParams)
             .NavigateAsync();
     }
 
-    public async Task NavigateToHomePageWithAddParameters()
+    public async Task<INavigationResult> NavigateToHomePageWithAddParameters()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddSegment<HomePage>()
             .AddParameter("KeyOne", "Hello World")
             .NavigateAsync();
     }
 
-    public async Task NavigateToHomePageWithMutlipleAddParameters()
+    public async Task<INavigationResult> NavigateToHomePageWithMutlipleAddParameters()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddSegment<HomePage>()
             .AddParameter("KeyOne", "Hello World")
             .AddParameter("KeyTwo", 123456)
             .NavigateAsync();
     }
 
-    public async Task NavigateToModalFromParameterNavigationHome()
+    public async Task<INavigationResult> NavigateToModalFromParameterNavigationHome()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddNavigationPage()
             .AddSegment<HomePage>()
             .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
             .NavigateAsync();
     }
 
-    public async Task NavigateToModalNavigationHome_FromSegmentWithAddSegmentUseModal()
+    public async Task<INavigationResult> NavigateToModalNavigationHome_FromSegmentWithAddSegmentUseModal()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddNavigationPage()
             .AddSegment<HomePage>(true)
             .NavigateAsync();
     }
 
-    public async Task NavigateToModalNavigationHome_FromSegmentWithAddNavigationUseModal()
+    public async Task<INavigationResult> NavigateToModalNavigationHome_FromSegmentWithAddNavigationUseModal()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddNavigationPage(true)
             .AddSegment<HomePage>()
             .NavigateAsync();
     }
 
-    public async Task NavigateToTabbedPageWithHomePageTab()
+    public async Task<INavigationResult> NavigateToTabbedPageWithHomePageTab()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddTabbedSegment(tabbed =>
                 tabbed.CreateTab<HomePage>())
             .NavigateAsync();
     }
 
-    public async Task NavigateToTabbedPageWithManyTabs()
+    public async Task<INavigationResult> NavigateToTabbedPageWithManyTabs()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddTabbedSegment(tabbed =>
                 tabbed.CreateTab<HomePage>().CreateTab<HelloPage>())
             .NavigateAsync();
     }
 
-    public async Task NavigateToTabbedPageWithManyTabsAndNavigationPages()
+    public async Task<INavigationResult> NavigateToTabbedPageWithManyTabsAndNavigationPages()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddTabbedSegment(tabbed =>
                 tabbed.CreateTab(b => b.AddNavigationPage().AddSegment<HomePage>())
                     .CreateTab(b => b.AddNavigationPage().AddSegment<HelloPage>()))
@@ -140,6 +140,8 @@ public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
     public SomeBuilderViewModelTests()
     {
         navigationService = new MockNavigationService();
+
+        navigationService.SetupAllNavigationReturns(true);
     }
 
     public override SomeBuilderViewModel CreateSystemUnderTest()

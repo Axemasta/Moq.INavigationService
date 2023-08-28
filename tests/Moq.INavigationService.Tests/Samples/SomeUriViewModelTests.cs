@@ -9,19 +9,19 @@ public class SomeUriViewModel
         this.navigationService = navigationService;
     }
 
-    public async Task NavigateToHomePage()
+    public async Task<INavigationResult> NavigateToHomePage()
     {
-        await navigationService.NavigateAsync("HomePage");
+        return await navigationService.NavigateAsync("HomePage");
     }
 
-    public async Task NavigateToHomePageViaUri()
+    public async Task<INavigationResult> NavigateToHomePageViaUri()
     {
         var uri = new Uri("HomePage", UriKind.Relative);
 
-        await navigationService.NavigateAsync(uri);
+        return await navigationService.NavigateAsync(uri);
     }
 
-    public async Task NavigateToHomePageWithParameters()
+    public async Task<INavigationResult> NavigateToHomePageWithParameters()
     {
         var navParams = new NavigationParameters
         {
@@ -30,17 +30,17 @@ public class SomeUriViewModel
             },
         };
 
-        await navigationService.NavigateAsync("HomePage", navParams);
+        return await navigationService.NavigateAsync("HomePage", navParams);
     }
 
-    public async Task NavigateToNavigationHomePage()
+    public async Task<INavigationResult> NavigateToNavigationHomePage()
     {
-        await navigationService.NavigateAsync("NavigationPage/HomePage");
+        return await navigationService.NavigateAsync("NavigationPage/HomePage");
     }
 
-    public async Task NavigateToModalHomePage()
+    public async Task<INavigationResult> NavigateToModalHomePage()
     {
-        await navigationService.NavigateAsync("HomePage", new NavigationParameters
+        return await navigationService.NavigateAsync("HomePage", new NavigationParameters
         {
             {
                 KnownNavigationParameters.UseModalNavigation, true
@@ -48,9 +48,9 @@ public class SomeUriViewModel
         });
     }
 
-    public async Task NavigateToModalNavigationHomePage()
+    public async Task<INavigationResult> NavigateToModalNavigationHomePage()
     {
-        await navigationService.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
+        return await navigationService.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
         {
             {
                 KnownNavigationParameters.UseModalNavigation, true
@@ -58,19 +58,19 @@ public class SomeUriViewModel
         });
     }
 
-    public async Task NavigateToTabbedPageWithHomePageTab()
+    public async Task<INavigationResult> NavigateToTabbedPageWithHomePageTab()
     {
-        await navigationService.NavigateAsync("TabbedPage?createTab=HomePage");
+        return await navigationService.NavigateAsync("TabbedPage?createTab=HomePage");
     }
 
-    public async Task NavigateToTabbedPageWithManyTabs()
+    public async Task<INavigationResult> NavigateToTabbedPageWithManyTabs()
     {
-        await navigationService.NavigateAsync("TabbedPage?createTab=HomePage&createTab=HelloPage");
+        return await navigationService.NavigateAsync("TabbedPage?createTab=HomePage&createTab=HelloPage");
     }
 
-    public async Task NavigateToTabbedPageWithManyTabsAndNavigationPages()
+    public async Task<INavigationResult> NavigateToTabbedPageWithManyTabsAndNavigationPages()
     {
-        await navigationService.NavigateAsync("TabbedPage?createTab=NavigationPage|HomePage&createTab=NavigationPage|HelloPage");
+        return await navigationService.NavigateAsync("TabbedPage?createTab=NavigationPage|HomePage&createTab=NavigationPage|HelloPage");
     }
 }
 
