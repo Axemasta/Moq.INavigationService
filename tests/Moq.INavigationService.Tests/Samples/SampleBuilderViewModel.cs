@@ -38,9 +38,9 @@ public class SampleBuilderViewModel
             .NavigateAsync();
     }
 
-    public async Task NavigateToModalHomePageViaSegment()
+    public async Task<INavigationResult> NavigateToModalHomePageViaSegment()
     {
-        await navigationService.CreateBuilder()
+        return await navigationService.CreateBuilder()
             .AddSegment<HomePage>(true)
             .NavigateAsync();
     }

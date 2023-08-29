@@ -156,88 +156,187 @@ public class SetupBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
     public async Task NavigateToHomePageWithAddParameters_WhenSetupIsMatched_ShouldReturnSetup()
     {
         // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter("KeyOne", "Hello World")
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
 
         // Act
+        var result = await Sut.NavigateToHomePageWithAddParameters();
 
         // Assert
-        throw new NotImplementedException();
+        Assert.Equal(expectedNavigationResult, result);
+        navigationService.Verify();
     }
 
     [Fact]
     public async Task NavigateToHomePageWithAddParameters_WhenSetupIsNotMatched_ShouldReturnNull()
     {
         // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HelloPage>()
+                .AddParameter("KeyOne", "Hello World")
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter("KeyOne", "World Hello")
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
 
         // Act
+        var result = await Sut.NavigateToHomePageWithAddParameters();
 
         // Assert
-        throw new NotImplementedException();
+        Assert.Null(result);
     }
 
     [Fact]
     public async Task NavigateToHomePageWithMultipleAddParameters_WhenSetupIsMatched_ShouldReturnSetup()
     {
         // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter("KeyOne", "Hello World")
+                .AddParameter("KeyTwo", 123456)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
 
         // Act
+        var result = await Sut.NavigateToHomePageWithMutlipleAddParameters();
 
         // Assert
-        throw new NotImplementedException();
+        Assert.Equal(expectedNavigationResult, result);
+        navigationService.Verify();
     }
 
     [Fact]
     public async Task NavigateToHomePageWithMultipleAddParameters_WhenSetupIsNotMatched_ShouldReturnNull()
     {
         // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HelloPage>()
+                .AddParameter("KeyOne", "World Hello")
+                .AddParameter("KeyTwo", 123456)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter("KeyOne", "World Hello")
+                .AddParameter("KeyTwo", 123456)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter("KeyOne", "Hello World")
+                .AddParameter("KeyTwo", 34)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
 
         // Act
+        var result = await Sut.NavigateToHomePageWithMutlipleAddParameters();
 
         // Assert
-        throw new NotImplementedException();
+        Assert.Null(result);
     }
 
     [Fact]
     public async Task NavigateToModalHomePageViaSegment_WhenSetupIsMatched_ShouldReturnSetup()
     {
         // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>(true)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
 
         // Act
+        var result = await Sut.NavigateToModalHomePageViaSegment();
 
         // Assert
-        throw new NotImplementedException();
+        Assert.Equal(expectedNavigationResult, result);
+        navigationService.Verify();
     }
 
     [Fact]
     public async Task NavigateToModalHomePageViaSegment_WhenSetupIsNotMatched_ShouldReturnNull()
     {
         // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>(false)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HelloPage>(true)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
 
         // Act
+        var result = await Sut.NavigateToModalHomePageViaSegment();
 
         // Assert
-        throw new NotImplementedException();
+        Assert.Null(result);
     }
 
     [Fact]
     public async Task NavigateToModalHomePageViaParameter_WhenSetupIsMatched_ShouldReturnSetup()
     {
         // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
 
         // Act
+        var result = await Sut.NavigateToModalHomePageViaParameter();
 
         // Assert
-        throw new NotImplementedException();
+        Assert.Equal(expectedNavigationResult, result);
+        navigationService.Verify();
     }
 
     [Fact]
     public async Task NavigateToModalHomePageViaParameter_WhenSetupIsNotMatched_ShouldReturnNull()
     {
         // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HomePage>()
+                .AddParameter(KnownNavigationParameters.UseModalNavigation, false)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .AddSegment<HelloPage>()
+                .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
 
         // Act
+        var result = await Sut.NavigateToModalHomePageViaParameter();
 
         // Assert
-        throw new NotImplementedException();
+        Assert.Null(result);
     }
 
     #endregion Tests

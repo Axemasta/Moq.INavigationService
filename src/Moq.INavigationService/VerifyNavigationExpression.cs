@@ -3,7 +3,7 @@ namespace Moq;
 
 internal class VerifyNavigationExpression
 {
-    public required VerifyNavigationExpressionArgs Args { get; set; }
+    public required NavigationExpressionArgs Args { get; set; }
     public required Expression DestinationStringExpression { get; set; }
     public required Expression DestinationUriExpression { get; set; }
     public required Expression NavigationParametersExpression { get; set; }
@@ -19,7 +19,7 @@ internal class VerifyNavigationExpression
     {
         return new VerifyNavigationExpression
         {
-            Args = VerifyNavigationExpressionArgs.FromUriExpression(expression),
+            Args = NavigationExpressionArgs.FromUriExpression(expression),
             DestinationStringExpression = ExpressionInspector.GetArgExpressionOf<string>(expression),
             DestinationUriExpression = ExpressionInspector.GetArgExpressionOf<Uri>(expression),
             NavigationParametersExpression = ExpressionInspector.GetArgExpressionOf<NavigationParameters>(expression),
@@ -28,7 +28,7 @@ internal class VerifyNavigationExpression
 
     private static VerifyNavigationExpression ParseNavigationBuilderExpression(Expression expression)
     {
-        var args = VerifyNavigationExpressionArgs.FromNavigationBuilderExpression(expression);
+        var args = NavigationExpressionArgs.FromNavigationBuilderExpression(expression);
 
         return new VerifyNavigationExpression
         {
