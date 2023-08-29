@@ -154,7 +154,7 @@ internal class VerifyNavigationExpressionArgs
 
                 case nameof(INavigationBuilder.WithParameters):
                 {
-                    var argument = call.Arguments.FirstOrDefault() as ListInitExpression;
+                    var argument = call.Arguments.FirstOrDefault();
 
                     var parameters = argument.GetExpressionValue<INavigationParameters>();
 

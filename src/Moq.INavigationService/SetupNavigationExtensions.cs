@@ -52,10 +52,12 @@ public static class SetupNavigationExtensions
         GuardVerifyExpressionIsForNavigationExtensions(expression);
 
         // Workout uri
+        var verifyNavigationExpression = VerifyNavigationExpression.From(expression);
 
-
-        throw new NotImplementedException();
-        //return navigationServiceMock.Setup(m => m.NavigateAsync(new Uri(""), null));
+        return ApplySetup(
+            navigationServiceMock,
+            verifyNavigationExpression?.Args?.NavigationUri,
+            verifyNavigationExpression?.Args?.NavigationParameters);
     }
 
     #endregion Public API
