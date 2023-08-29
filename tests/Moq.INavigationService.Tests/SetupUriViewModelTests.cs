@@ -55,6 +55,25 @@ public class SetupUriViewModelTests : FixtureBase<SampleUriViewModel>
     }
 
     [Fact]
+    public void Setup_NavigateToHomePageWhenSetupIsInvalid_ShouldThrow()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        // Act
+        var ex = Record.Exception(() =>
+        {
+            string destination = null!;
+
+            navigationService.SetupNavigation(destination)
+                .ReturnsAsync(expectedNavigationResult);
+        });
+
+        // Assert
+        Assert.IsType<NotSupportedException>(ex);
+    }
+
+    [Fact]
     public async Task Setup_NavigateToHomePageViaUriWhenSetupIsMatched_ShouldReturnSetup()
     {
         // Arrange
@@ -130,6 +149,32 @@ public class SetupUriViewModelTests : FixtureBase<SampleUriViewModel>
 
         // Assert
         Assert.Null(result);
+    }
+
+    [Fact]
+    public void Setup_NavigateToHomePageWithParametersWhenSetupIsInvalid_ShouldThrow()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        var parameters = new NavigationParameters
+        {
+            {
+                "KeyTwo", 139478
+            },
+        };
+
+        // Act
+        var ex = Record.Exception(() =>
+        {
+            string destination = null!;
+
+            navigationService.SetupNavigation(destination, parameters)
+                .ReturnsAsync(expectedNavigationResult);
+        });
+
+        // Assert
+        Assert.IsType<NotSupportedException>(ex);
     }
 
     [Fact]
