@@ -8,14 +8,6 @@ public class MockNavigationService : Mock<INavigationService>, INavigationServic
     public MockNavigationService()
     {
         Registry = new MockViewRegistry();
-
-        var mockResult = new Mock<INavigationResult>();
-
-        mockResult.SetupGet(m => m.Success)
-            .Returns(false);
-
-        Setup(m => m.NavigateAsync(It.IsAny<Uri>(), It.IsAny<INavigationParameters>()))
-            .ReturnsAsync(mockResult.Object);
     }
 
     #region INavigationService

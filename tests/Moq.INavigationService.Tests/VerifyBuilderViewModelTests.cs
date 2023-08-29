@@ -1,150 +1,23 @@
-﻿using Moq.Tests.Samples.Pages;
-namespace Moq.Tests.Samples;
+using Moq.Tests.Samples;
 
-public class SomeBuilderViewModel
-{
-    private readonly INavigationService navigationService;
+namespace Moq.Tests;
 
-    public SomeBuilderViewModel(INavigationService navigationService)
-    {
-        this.navigationService = navigationService;
-    }
-
-    public async Task NavigateToHomePage()
-    {
-        await navigationService.CreateBuilder()
-            .AddSegment<HomePage>()
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToDeepLinkedPage()
-    {
-        await navigationService.CreateBuilder()
-            .AddSegment<HomePage>()
-            .AddSegment<HelloPage>()
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToNavigationHomePage()
-    {
-        await navigationService.CreateBuilder()
-            .AddNavigationPage()
-            .AddSegment<HomePage>()
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToModalHomePageViaSegment()
-    {
-        await navigationService.CreateBuilder()
-            .AddSegment<HomePage>(true)
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToModalHomePageViaParameter()
-    {
-        await navigationService.CreateBuilder()
-            .AddSegment<HomePage>()
-            .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToHomePageWithParameters()
-    {
-        var navParams = new NavigationParameters
-        {
-            {
-                "KeyOne", "Hello World"
-            },
-        };
-
-        await navigationService.CreateBuilder()
-            .AddSegment<HomePage>()
-            .WithParameters(navParams)
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToHomePageWithAddParameters()
-    {
-        await navigationService.CreateBuilder()
-            .AddSegment<HomePage>()
-            .AddParameter("KeyOne", "Hello World")
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToHomePageWithMutlipleAddParameters()
-    {
-        await navigationService.CreateBuilder()
-            .AddSegment<HomePage>()
-            .AddParameter("KeyOne", "Hello World")
-            .AddParameter("KeyTwo", 123456)
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToModalFromParameterNavigationHome()
-    {
-        await navigationService.CreateBuilder()
-            .AddNavigationPage()
-            .AddSegment<HomePage>()
-            .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToModalNavigationHome_FromSegmentWithAddSegmentUseModal()
-    {
-        await navigationService.CreateBuilder()
-            .AddNavigationPage()
-            .AddSegment<HomePage>(true)
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToModalNavigationHome_FromSegmentWithAddNavigationUseModal()
-    {
-        await navigationService.CreateBuilder()
-            .AddNavigationPage(true)
-            .AddSegment<HomePage>()
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToTabbedPageWithHomePageTab()
-    {
-        await navigationService.CreateBuilder()
-            .AddTabbedSegment(tabbed =>
-                tabbed.CreateTab<HomePage>())
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToTabbedPageWithManyTabs()
-    {
-        await navigationService.CreateBuilder()
-            .AddTabbedSegment(tabbed =>
-                tabbed.CreateTab<HomePage>().CreateTab<HelloPage>())
-            .NavigateAsync();
-    }
-
-    public async Task NavigateToTabbedPageWithManyTabsAndNavigationPages()
-    {
-        await navigationService.CreateBuilder()
-            .AddTabbedSegment(tabbed =>
-                tabbed.CreateTab(b => b.AddNavigationPage().AddSegment<HomePage>())
-                    .CreateTab(b => b.AddNavigationPage().AddSegment<HelloPage>()))
-            .NavigateAsync();
-    }
-}
-
-public class SomeBuilderViewModelTests : FixtureBase<SomeBuilderViewModel>
+public class VerifyBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
 {
     #region Setup
 
     private readonly MockNavigationService navigationService;
 
-    public SomeBuilderViewModelTests()
+    public VerifyBuilderViewModelTests()
     {
         navigationService = new MockNavigationService();
+
+        navigationService.SetupAllNavigationReturns(true);
     }
 
-    public override SomeBuilderViewModel CreateSystemUnderTest()
+    public override SampleBuilderViewModel CreateSystemUnderTest()
     {
-        return new SomeBuilderViewModel(navigationService);
+        return new SampleBuilderViewModel(navigationService);
     }
 
     #endregion Setup

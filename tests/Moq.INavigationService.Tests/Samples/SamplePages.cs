@@ -1,4 +1,4 @@
-﻿namespace Moq.Tests.Samples.Pages;
+namespace Moq.Tests.Samples;
 
 public class HomePage : ContentPage
 {

@@ -41,14 +41,6 @@ public static class VerifyNavigationExtensions
 
     private static void Verify(Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
     {
-        /*
-         * TODO List:
-         * - Add an extension to call for mock setup to protect the Mock<INavigationService> from:
-         *   System.InvalidCastException : Unable to cast object of type 'Castle.Proxies.INavigationServiceProxy' to type 'Prism.Common.IRegistryAware'.
-         * - Implement verification calls
-         *
-         */
-
         GuardVerifyExpressionIsForNavigationExtensions(expression);
 
         if (string.IsNullOrEmpty(failMessage))

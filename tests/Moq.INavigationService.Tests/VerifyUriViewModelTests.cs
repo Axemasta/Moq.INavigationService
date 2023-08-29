@@ -1,93 +1,21 @@
-﻿namespace Moq.Tests.Samples;
+using Moq.Tests.Samples;
 
-public class SomeUriViewModel
-{
-    private readonly INavigationService navigationService;
+namespace Moq.Tests;
 
-    public SomeUriViewModel(INavigationService navigationService)
-    {
-        this.navigationService = navigationService;
-    }
-
-    public async Task NavigateToHomePage()
-    {
-        await navigationService.NavigateAsync("HomePage");
-    }
-
-    public async Task NavigateToHomePageViaUri()
-    {
-        var uri = new Uri("HomePage", UriKind.Relative);
-
-        await navigationService.NavigateAsync(uri);
-    }
-
-    public async Task NavigateToHomePageWithParameters()
-    {
-        var navParams = new NavigationParameters
-        {
-            {
-                "KeyOne", "Hello World"
-            },
-        };
-
-        await navigationService.NavigateAsync("HomePage", navParams);
-    }
-
-    public async Task NavigateToNavigationHomePage()
-    {
-        await navigationService.NavigateAsync("NavigationPage/HomePage");
-    }
-
-    public async Task NavigateToModalHomePage()
-    {
-        await navigationService.NavigateAsync("HomePage", new NavigationParameters
-        {
-            {
-                KnownNavigationParameters.UseModalNavigation, true
-            },
-        });
-    }
-
-    public async Task NavigateToModalNavigationHomePage()
-    {
-        await navigationService.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
-        {
-            {
-                KnownNavigationParameters.UseModalNavigation, true
-            },
-        });
-    }
-
-    public async Task NavigateToTabbedPageWithHomePageTab()
-    {
-        await navigationService.NavigateAsync("TabbedPage?createTab=HomePage");
-    }
-
-    public async Task NavigateToTabbedPageWithManyTabs()
-    {
-        await navigationService.NavigateAsync("TabbedPage?createTab=HomePage&createTab=HelloPage");
-    }
-
-    public async Task NavigateToTabbedPageWithManyTabsAndNavigationPages()
-    {
-        await navigationService.NavigateAsync("TabbedPage?createTab=NavigationPage|HomePage&createTab=NavigationPage|HelloPage");
-    }
-}
-
-public class SomeUriViewModelTests : FixtureBase<SomeUriViewModel>
+public class VerifyUriViewModelTests : FixtureBase<SampleUriViewModel>
 {
     #region Setup
 
     private readonly MockNavigationService navigationService;
 
-    public SomeUriViewModelTests()
+    public VerifyUriViewModelTests()
     {
         navigationService = new MockNavigationService();
     }
 
-    public override SomeUriViewModel CreateSystemUnderTest()
+    public override SampleUriViewModel CreateSystemUnderTest()
     {
-        return new SomeUriViewModel(navigationService);
+        return new SampleUriViewModel(navigationService);
     }
 
     #endregion Setup

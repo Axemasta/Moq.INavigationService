@@ -27,6 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
     <None Include="..\..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -34,12 +35,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Moq" Version="4.20.69"/>
-    <PackageReference Include="Prism.Maui" Version="8.1.273-pre"/>
+    <PackageReference Include="Moq" Version="4.20.69" />
+    <PackageReference Include="Prism.Maui" Version="8.1.273-pre" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
   </ItemGroup>
 
 </Project>

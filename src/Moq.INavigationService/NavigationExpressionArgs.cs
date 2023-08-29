@@ -3,25 +3,25 @@ using System.Reflection;
 using Prism.Navigation.Builder;
 namespace Moq;
 
-internal class VerifyNavigationExpressionArgs
+internal class NavigationExpressionArgs
 {
     public required Uri NavigationUri { get; set; }
     public INavigationParameters? NavigationParameters { get; set; }
 
-    public static VerifyNavigationExpressionArgs FromNavigationBuilderExpression(Expression expression)
+    public static NavigationExpressionArgs FromNavigationBuilderExpression(Expression expression)
     {
         var args = ParseUriBuilderExpression(expression);
 
-        return new VerifyNavigationExpressionArgs
+        return new NavigationExpressionArgs
         {
             NavigationUri = args.Uri,
             NavigationParameters = args.NavigationParameters,
         };
     }
 
-    public static VerifyNavigationExpressionArgs FromUriExpression(Expression expression)
+    public static NavigationExpressionArgs FromUriExpression(Expression expression)
     {
-        return new VerifyNavigationExpressionArgs
+        return new NavigationExpressionArgs
         {
             NavigationUri = GetNavigationUriFrom(expression),
             NavigationParameters = ExpressionInspector.GetArgOf<NavigationParameters>(expression),
@@ -154,7 +154,7 @@ internal class VerifyNavigationExpressionArgs
 
                 case nameof(INavigationBuilder.WithParameters):
                 {
-                    var argument = call.Arguments.FirstOrDefault() as ListInitExpression;
+                    var argument = call.Arguments.FirstOrDefault();
 
                     var parameters = argument.GetExpressionValue<INavigationParameters>();
 
