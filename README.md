@@ -17,6 +17,71 @@ var mockNavigationService = new MockNavigationService();
 var sut = new FooViewModel(mockNavigationService);
 ```
 
+### Setup
+
+To setup navigation in your tests, use the `SetupNavigation` api. There are a few options you can provide:
+- `string`
+```csharp
+navigationService.SetupNavigation("HomePage")
+```
+- `string`, `INavigationParameters`
+```csharp
+navigationService.SetupNavigation("HomePage", It.Is<INavigationParameters>(n => n.ContainsKey("KeyOne")))
+```
+- `Uri`
+```csharp
+navigationService.SetupNavigation(new Uri("NavigationPage/HomePage"))
+```
+- `Uri`, `INavigationParameters`
+```csharp
+navigationService.SetupNavigation(new Uri("NavigationPage/HomePage"), It.Is<INavigationParameters>(n => n.ContainsKey("KeyOne"))
+```
+- Navigation Service Expression
+```csharp
+// Uri Api
+navigationService.SetupNavigation(nav => nav.NavigateAsync("HomePage"))
+
+// Builder Api
+navigationService.SetupNavigation(nav => 
+    nav.CreateBuilder()
+    .AddSegment<HomePage>()
+    .NavigateAsync())
+```
+
+All of these setup methods plug into Moq and you should determine the behaviour based on your project (ie `ReturnsAsync` or `ThrowsAsync`). A complete setup would look like:
+
+```csharp
+var expectedNavigationResult = new NavigationResult();
+
+// Setup using uri api
+navigationService.SetupNavigation("HomePage")
+    .ReturnsAsync(expectedNavigationResult);
+
+// Setup using navigation builder api
+navigationService.SetupNavigation(nav => nav.CreateBuilder()
+        .AddSegment<HomePage>()
+        .AddParameter(KnownNavigationParameters.UseModalNavigation, true)
+        .NavigateAsync())
+    .ReturnsAsync(expectedNavigationResult);
+```
+
+There is also a generic setup method that will cause all navigations to return regardless of the specific navigation that occurs:
+
+```csharp
+// All navigation returns true:
+navigationService.SetupAllNavigationReturns(true);
+
+// All navigation returns false:
+navigationService.SetupAllNavigationReturns(false);
+
+
+// All navigation fails with exception:
+var expectedException = new Exception("Navigation fell over and the app crashed");
+navigationService.SetupAllNavigationFails(expectedException);
+```
+
+### Verify
+
 To verify navigation in your tests, use the `VerifyNavigation` api & provide the expression you wish to verify:
 
 ```csharp

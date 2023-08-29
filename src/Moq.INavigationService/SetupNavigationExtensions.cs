@@ -6,12 +6,26 @@ public static class SetupNavigationExtensions
 {
     #region Public API
 
-    public static void SetupAllNavigationReturns(this Mock<INavigationService> navigationServiceMock, bool result = false)
+    public static void SetupAllNavigationReturns(this Mock<INavigationService> navigationServiceMock, bool result)
     {
         var mockResult = new Mock<INavigationResult>();
 
         mockResult.SetupGet(m => m.Success)
             .Returns(result);
+
+        navigationServiceMock.Setup(m => m.NavigateAsync(It.IsAny<Uri>(), It.IsAny<INavigationParameters>()))
+            .ReturnsAsync(mockResult.Object);
+    }
+
+    public static void SetupAllNavigationFails(this Mock<INavigationService> navigationServiceMock, Exception exception)
+    {
+        var mockResult = new Mock<INavigationResult>();
+
+        mockResult.SetupGet(m => m.Success)
+            .Returns(false);
+
+        mockResult.SetupGet(m => m.Exception)
+            .Returns(exception);
 
         navigationServiceMock.Setup(m => m.NavigateAsync(It.IsAny<Uri>(), It.IsAny<INavigationParameters>()))
             .ReturnsAsync(mockResult.Object);
