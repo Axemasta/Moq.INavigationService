@@ -303,5 +303,39 @@ public class VerifyBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
         Assert.IsType<VerifyNavigationException>(ex);
     }
 
+    [Fact]
+    public async Task NavigateToHomePageUsingRelativeNavigation_WhenCalled_ShouldVerify()
+    {
+        // Arrange
+
+        // Act
+        await Sut.NavigateToHomePageUsingRelativeNavigation();
+
+        // Assert
+        navigationService.VerifyNavigation(
+            nav => nav.CreateBuilder()
+                .UseRelativeNavigation()
+                .AddSegment<HomePage>()
+                .NavigateAsync(),
+            Times.Once());
+    }
+
+    [Fact]
+    public async Task NavigateToHomePageUsingAbsoluteNavigation_WhenCalled_ShouldVerify()
+    {
+        // Arrange
+
+        // Act
+        await Sut.NavigateToHomePageUsingAbsoluteNavigation();
+
+        // Assert
+        navigationService.VerifyNavigation(
+            nav => nav.CreateBuilder()
+                .UseAbsoluteNavigation()
+                .AddSegment<HomePage>()
+                .NavigateAsync(),
+            Times.Once());
+    }
+
     #endregion Tests
 }
