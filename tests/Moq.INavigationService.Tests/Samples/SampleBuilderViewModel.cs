@@ -38,6 +38,22 @@ public class SampleBuilderViewModel
             .NavigateAsync();
     }
 
+    public async Task<INavigationResult> NavigateToHomePageUsingRelativeNavigation()
+    {
+        return await navigationService.CreateBuilder()
+            .UseRelativeNavigation()
+            .AddSegment<HomePage>()
+            .NavigateAsync();
+    }
+
+    public async Task<INavigationResult> NavigateToHomePageUsingAbsoluteNavigation()
+    {
+        return await navigationService.CreateBuilder()
+            .UseAbsoluteNavigation()
+            .AddSegment<HomePage>()
+            .NavigateAsync();
+    }
+
     public async Task<INavigationResult> NavigateToModalHomePageViaSegment()
     {
         return await navigationService.CreateBuilder()

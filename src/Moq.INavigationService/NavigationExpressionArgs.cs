@@ -201,6 +201,18 @@ internal class NavigationExpressionArgs
                     break;
                 }
 
+                case nameof(INavigationBuilder.UseAbsoluteNavigation):
+                {
+                    builder.UseAbsoluteNavigation();
+                    break;
+                }
+
+                case nameof(INavigationBuilder.UseRelativeNavigation):
+                {
+                    builder.UseRelativeNavigation();
+                    break;
+                }
+
                 case nameof(INavigationBuilder.AddTabbedSegment):
                 {
                     throw new NotSupportedException("This api has not been mapped and is not supported");

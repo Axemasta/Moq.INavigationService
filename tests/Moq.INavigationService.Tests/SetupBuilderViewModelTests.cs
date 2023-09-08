@@ -339,5 +339,45 @@ public class SetupBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
         Assert.Null(result);
     }
 
+    [Fact]
+    public async Task NavigateToHomePageUsingRelativeNavigation_WhenSetupIsMatched_ShouldReturnResult()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .UseRelativeNavigation()
+                .AddSegment<HomePage>()
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
+
+        // Act
+        var result = await Sut.NavigateToHomePageUsingRelativeNavigation();
+
+        // Assert
+        Assert.Equal(expectedNavigationResult, result);
+        navigationService.Verify();
+    }
+
+    [Fact]
+    public async Task NavigateToHomePageUsingAbsoluteNavigation_WhenSetupIsMatched_ShouldReturnResult()
+    {
+        // Arrange
+        var expectedNavigationResult = new NavigationResult();
+
+        navigationService.SetupNavigation(nav => nav.CreateBuilder()
+                .UseAbsoluteNavigation()
+                .AddSegment<HomePage>()
+                .NavigateAsync())
+            .ReturnsAsync(expectedNavigationResult);
+
+        // Act
+        var result = await Sut.NavigateToHomePageUsingAbsoluteNavigation();
+
+        // Assert
+        Assert.Equal(expectedNavigationResult, result);
+        navigationService.Verify();
+    }
+
     #endregion Tests
 }
