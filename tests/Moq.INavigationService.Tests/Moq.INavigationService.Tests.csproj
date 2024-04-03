@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>$(StandardTargetFramework)</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UseMaui>true</UseMaui>
@@ -27,5 +27,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Moq.INavigationService\Moq.INavigationService.csproj" />
   </ItemGroup>
-  
+
 </Project>
