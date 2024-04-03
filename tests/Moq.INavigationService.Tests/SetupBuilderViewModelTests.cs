@@ -22,7 +22,7 @@ public class SetupBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
 	#region Tests
 
 	[Fact]
-	public async Task Setup_WhenBuilderExpressionDoesntCallNavigateAsync_ShouldThrow()
+	public void Setup_WhenBuilderExpressionDoesntCallNavigateAsync_ShouldThrow()
 	{
 		// Arrange
 		var expectedNavigationResult = new NavigationResult();
@@ -43,7 +43,7 @@ public class SetupBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
 	}
 
 	[Fact]
-	public async Task Setup_WhenBuilderExpressionDoesntCallAnyMethod_ShouldThrow()
+	public void Setup_WhenBuilderExpressionDoesntCallAnyMethod_ShouldThrow()
 	{
 		// Arrange
 		var expectedNavigationResult = new NavigationResult();
