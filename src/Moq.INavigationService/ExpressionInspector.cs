@@ -22,14 +22,13 @@ internal static class ExpressionInspector
 		return val ?? throw new InvalidCastException($"Unable to cast {val} as {nameof(T)}");
 	}
 
-	internal static Expression GetArgExpression(Expression expression, Func<Expression, bool> argPredicate)
+	private static Expression? GetArgExpression(Expression expression, Func<Expression, bool> argPredicate)
 	{
 		var methodCall = (MethodCallExpression)((LambdaExpression)expression).Body;
-		var argExpression = methodCall.Arguments.FirstOrDefault(argPredicate);
-		return argExpression;
+		return methodCall.Arguments.FirstOrDefault(argPredicate);
 	}
 
-	internal static Expression GetArgExpressionOf<T>(Expression expression)
+	internal static Expression? GetArgExpressionOf<T>(Expression expression)
 	{
 		return GetArgExpression(expression, c => c.Type == typeof(T));
 	}

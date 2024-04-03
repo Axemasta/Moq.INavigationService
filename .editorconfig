@@ -187,6 +187,9 @@ csharp_prefer_static_local_function = true:warning
 # Undocumented
 csharp_style_namespace_declarations = file_scoped:warning
 
+dotnet_diagnostic.IDE0028.severity = none
+dotnet_diagnostic.IDE0300.severity = none
+
 ##########################################
 # Unnecessary Code Rules
 # https://docs.microsoft.com/dotnet/fundamentals/code-analysis/style-rules/unnecessary-code-rules

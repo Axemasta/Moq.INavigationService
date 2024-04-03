@@ -137,11 +137,11 @@ internal class NavigationExpressionArgs
 
 						var useModal = useModalArgument.GetExpressionValue<bool>();
 
-						builder.AddSegment(segmentType.Name, useModal);
+						builder.AddSegment(segmentType?.Name, useModal);
 					}
 					else
 					{
-						builder.AddSegment(segmentType.Name);
+						builder.AddSegment(segmentType?.Name);
 					}
 
 					break;
@@ -151,7 +151,7 @@ internal class NavigationExpressionArgs
 				{
 					var argument = call.Arguments.FirstOrDefault();
 
-					var parameters = argument.GetExpressionValue<INavigationParameters>() ?? throw new NotSupportedException($"Could not parse method call arguments as {nameof(INavigationParameters)}");
+					var parameters = argument?.GetExpressionValue<INavigationParameters>() ?? throw new NotSupportedException($"Could not parse method call arguments as {nameof(INavigationParameters)}");
 
 					builder.WithParameters(parameters);
 
@@ -204,9 +204,9 @@ internal class NavigationExpressionArgs
 					break;
 				}
 
-				case nameof(INavigationBuilder.AddTabbedSegment):
+				default:
 				{
-					throw new NotSupportedException("This api has not been mapped and is not supported");
+					throw new NotSupportedException($"This api has not been mapped and is not supported ({call.Method.Name})");
 				}
 			}
 		}

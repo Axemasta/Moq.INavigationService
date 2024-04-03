@@ -116,7 +116,7 @@ public static class VerifyNavigationExtensions
 		return verifyExpression;
 	}
 
-	private static Expression CreateNavigationUriExpression(VerifyNavigationExpression verifyNavigationExpression)
+	private static ConstantExpression CreateNavigationUriExpression(VerifyNavigationExpression verifyNavigationExpression)
 	{
 		return Expression.Constant(verifyNavigationExpression.Args.NavigationUri);
 	}

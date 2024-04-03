@@ -4,9 +4,9 @@ namespace Moq;
 internal class VerifyNavigationExpression
 {
 	public required NavigationExpressionArgs Args { get; set; }
-	public required Expression DestinationStringExpression { get; set; }
-	public required Expression DestinationUriExpression { get; set; }
-	public required Expression NavigationParametersExpression { get; set; }
+	public required Expression? DestinationStringExpression { get; set; }
+	public required Expression? DestinationUriExpression { get; set; }
+	public required Expression? NavigationParametersExpression { get; set; }
 
 	public static VerifyNavigationExpression From(Expression expression)
 	{

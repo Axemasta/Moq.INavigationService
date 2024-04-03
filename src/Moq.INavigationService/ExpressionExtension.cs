@@ -11,6 +11,11 @@ public static class ExpressionExtension
 				.Compile()
 				.DynamicInvoke();
 
+			if (value is null)
+			{
+				return default;
+			}
+
 			return (T)value;
 		}
 		catch
