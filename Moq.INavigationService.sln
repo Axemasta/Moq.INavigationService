@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		directory.build.props = directory.build.props
 		global.json = global.json
 		.editorconfig = .editorconfig
+		version.json = version.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{30AB869E-442D-4AF2-A020-9BAD5C15A8C6}"

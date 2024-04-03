@@ -1,267 +1,253 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using System.Reflection;
 using Prism.Navigation.Builder;
 namespace Moq;
 
 internal class NavigationExpressionArgs
 {
-    public required Uri NavigationUri { get; set; }
-    public INavigationParameters? NavigationParameters { get; set; }
+	public required Uri NavigationUri { get; set; }
+	public INavigationParameters? NavigationParameters { get; set; }
 
-    public static NavigationExpressionArgs FromNavigationBuilderExpression(Expression expression)
-    {
-        var args = ParseUriBuilderExpression(expression);
+	public static NavigationExpressionArgs FromNavigationBuilderExpression(Expression expression)
+	{
+		var args = ParseUriBuilderExpression(expression);
 
-        return new NavigationExpressionArgs
-        {
-            NavigationUri = args.Uri,
-            NavigationParameters = args.NavigationParameters,
-        };
-    }
+		return new NavigationExpressionArgs
+		{
+			NavigationUri = args.Uri,
+			NavigationParameters = args.NavigationParameters,
+		};
+	}
 
-    public static NavigationExpressionArgs FromUriExpression(Expression expression)
-    {
-        return new NavigationExpressionArgs
-        {
-            NavigationUri = GetNavigationUriFrom(expression),
-            NavigationParameters = ExpressionInspector.GetArgOf<NavigationParameters>(expression),
-        };
-    }
+	public static NavigationExpressionArgs FromUriExpression(Expression expression)
+	{
+		return new NavigationExpressionArgs
+		{
+			NavigationUri = GetNavigationUriFrom(expression),
+			NavigationParameters = ExpressionInspector.GetArgOf<NavigationParameters>(expression),
+		};
+	}
 
-    private static List<MethodCallExpression> GetMethodCallExpressionHierarchy(MethodCallExpression methodCall)
-    {
-        var calls = new List<MethodCallExpression>
-        {
-            methodCall,
-        };
+	private static List<MethodCallExpression> GetMethodCallExpressionHierarchy(MethodCallExpression methodCall)
+	{
+		var calls = new List<MethodCallExpression>
+		{
+			methodCall,
+		};
 
-        var currentExpression = methodCall;
+		var currentExpression = methodCall;
 
-        while (currentExpression != null)
-        {
-            currentExpression = GetPreviousCall(currentExpression);
-            ;
+		while (currentExpression != null)
+		{
+			currentExpression = GetPreviousCall(currentExpression);
+			;
 
-            if (currentExpression is not null)
-            {
-                calls.Add(currentExpression);
-            }
-        }
+			if (currentExpression is not null)
+			{
+				calls.Add(currentExpression);
+			}
+		}
 
-        return calls;
-    }
+		return calls;
+	}
 
-    private static MethodCallExpression? GetPreviousCall(MethodCallExpression methodCall)
-    {
-        if (methodCall is null)
-        {
-            return null;
-        }
+	private static MethodCallExpression? GetPreviousCall(MethodCallExpression methodCall)
+	{
+		if (methodCall is null)
+		{
+			return null;
+		}
 
-        if (methodCall.Object is not null)
-        {
-            return methodCall.Object as MethodCallExpression;
-        }
+		if (methodCall.Object is not null)
+		{
+			return methodCall.Object as MethodCallExpression;
+		}
 
-        if (methodCall.Arguments.Any())
-        {
-            return methodCall.Arguments.FirstOrDefault() as MethodCallExpression;
-        }
+		if (methodCall.Arguments.Count != 0)
+		{
+			return methodCall.Arguments.FirstOrDefault() as MethodCallExpression;
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    private static INavigationBuilder CreateNavigationBuilder(INavigationService navigationService)
-    {
-        var prismAssembly = typeof(INavigationService).Assembly;
+	private static INavigationBuilder CreateNavigationBuilder(INavigationService navigationService)
+	{
+		var prismAssembly = typeof(INavigationService).Assembly;
 
-        var prismTypes = prismAssembly.GetTypes();
+		var prismTypes = prismAssembly.GetTypes();
 
-        var navigationBuilderType = prismTypes.FirstOrDefault(t => t.Name == "NavigationBuilder");
+		var navigationBuilderType = prismTypes.FirstOrDefault(t => t.Name == "NavigationBuilder") ?? throw new InvalidOperationException("Unable to find prism type for NavigationBuilder");
 
-        if (navigationBuilderType is null)
-        {
-            throw new InvalidOperationException("Unable to find prism type for NavigationBuilder");
-        }
+		var builder = Activator.CreateInstance(navigationBuilderType, navigationService) as INavigationBuilder;
 
-        var builder = Activator.CreateInstance(navigationBuilderType, navigationService) as INavigationBuilder;
+		return builder ?? throw new InvalidOperationException("Unable to create instance of NavigationBuilder");
+	}
 
-        return builder ?? throw new InvalidOperationException("Unable to create instance of NavigationBuilder");
-    }
+	private static (Uri Uri, INavigationParameters? NavigationParameters) ParseUriBuilderExpression(Expression expression)
+	{
+		var methodCall = (MethodCallExpression)((LambdaExpression)expression).Body;
 
-    private static (Uri Uri, INavigationParameters? NavigationParameters) ParseUriBuilderExpression(Expression expression)
-    {
-        var methodCall = (MethodCallExpression)((LambdaExpression)expression).Body;
+		var obj = methodCall.Object as MethodCallExpression;
 
-        var obj = methodCall.Object as MethodCallExpression;
+		var methodCalls = GetMethodCallExpressionHierarchy(methodCall);
 
-        var methodCalls = GetMethodCallExpressionHierarchy(methodCall);
+		var mockNavigationService = new MockNavigationService();
 
-        var mockNavigationService = new MockNavigationService();
+		var builder = CreateNavigationBuilder(mockNavigationService);
 
-        var builder = CreateNavigationBuilder(mockNavigationService);
+		var outerMethodNames = new List<string>
+		{
+			nameof(NavigationBuilderExtensions.CreateBuilder),
+			nameof(INavigationService.NavigateAsync),
+		};
 
-        var outerMethodNames = new List<string>
-        {
-            nameof(NavigationBuilderExtensions.CreateBuilder),
-            nameof(INavigationService.NavigateAsync),
-        };
+		// Reverse calls to start from begginning for accurate simulation
+		foreach (var call in methodCalls.Reverse<MethodCallExpression>())
+		{
+			if (outerMethodNames.Contains(call.Method.Name))
+			{
+				// We don't care about simulating CreateBuilder() or NavigateAsync()
+				continue;
+			}
 
-        // Reverse calls to start from begginning for accurate simulation
-        foreach (var call in methodCalls.Reverse<MethodCallExpression>())
-        {
-            if (outerMethodNames.Contains(call.Method.Name))
-            {
-                // We don't care about simulating CreateBuilder() or NavigateAsync()
-                continue;
-            }
+			// Simulate this call on the builder to get our expected params
+			switch (call.Method.Name)
+			{
+				case nameof(INavigationBuilder.AddSegment):
+				{
+					// Check for a generic type
+					var segmentType = call.Method.GetGenericArguments().FirstOrDefault();
 
-            // Simulate this call on the builder to get our expected params
-            switch (call.Method.Name)
-            {
-                case nameof(INavigationBuilder.AddSegment):
-                {
-                    // Check for a generic type
-                    var segmentType = call.Method.GetGenericArguments().FirstOrDefault();
+					var usedGenericAddSegment = segmentType is not null;
 
-                    var usedGenericAddSegment = segmentType is not null;
+					if (!usedGenericAddSegment && call.Arguments.Count == 3)
+					{
+						var destinationArgument = call.Arguments[1];
+						var useModalArgument = call.Arguments[2];
 
-                    if (!usedGenericAddSegment && call.Arguments.Count == 3)
-                    {
-                        var destinationArgument = call.Arguments[1];
-                        var useModalArgument = call.Arguments[2];
+						var useModal = useModalArgument.GetExpressionValue<bool?>();
+						var destination = destinationArgument.GetExpressionValue<string>();
 
-                        var useModal = useModalArgument.GetExpressionValue<bool?>();
-                        var destination = destinationArgument.GetExpressionValue<string>();
+						builder.AddSegment(destination, useModal);
+					}
+					else if (call.Arguments.Count == 2)
+					{
+						var useModalArgument = call.Arguments[1];
 
-                        builder.AddSegment(destination, useModal);
-                    }
-                    else if (call.Arguments.Count == 2)
-                    {
-                        var useModalArgument = call.Arguments[1];
+						var useModal = useModalArgument.GetExpressionValue<bool>();
 
-                        var useModal = useModalArgument.GetExpressionValue<bool>();
+						builder.AddSegment(segmentType?.Name, useModal);
+					}
+					else
+					{
+						builder.AddSegment(segmentType?.Name);
+					}
 
-                        builder.AddSegment(segmentType.Name, useModal);
-                    }
-                    else
-                    {
-                        builder.AddSegment(segmentType.Name);
-                    }
+					break;
+				}
 
-                    break;
-                }
+				case nameof(INavigationBuilder.WithParameters):
+				{
+					var argument = call.Arguments.FirstOrDefault();
 
-                case nameof(INavigationBuilder.WithParameters):
-                {
-                    var argument = call.Arguments.FirstOrDefault();
+					var parameters = argument?.GetExpressionValue<INavigationParameters>() ?? throw new NotSupportedException($"Could not parse method call arguments as {nameof(INavigationParameters)}");
 
-                    var parameters = argument.GetExpressionValue<INavigationParameters>();
+					builder.WithParameters(parameters);
 
-                    if (parameters is null)
-                    {
-                        throw new NotSupportedException($"Could not parse method call arguments as {nameof(INavigationParameters)}");
-                    }
+					break;
+				}
 
-                    builder.WithParameters(parameters);
+				case nameof(INavigationBuilder.AddParameter):
+				{
+					var keyArgument = call.Arguments[0];
+					var valueArgument = call.Arguments[1];
 
-                    break;
-                }
+					var keyValue = keyArgument.GetExpressionValue<string>();
+					var valueValue = valueArgument.GetExpressionValue<object?>();
 
-                case nameof(INavigationBuilder.AddParameter):
-                {
-                    var keyArgument = call.Arguments[0];
-                    var valueArgument = call.Arguments[1];
+					builder.AddParameter(keyValue, valueValue);
 
-                    var keyValue = keyArgument.GetExpressionValue<string>();
-                    var valueValue = valueArgument.GetExpressionValue<object?>();
+					break;
+				}
 
-                    builder.AddParameter(keyValue, valueValue);
+				case nameof(NavigationBuilderExtensions.AddNavigationPage):
+				{
+					if (call.Arguments.Count == 1)
+					{
+						builder.AddNavigationPage();
+					}
+					else if (call.Arguments.Count == 2)
+					{
+						var useModalArgument = call.Arguments[1];
+						var useModal = useModalArgument.GetExpressionValue<bool>();
 
-                    break;
-                }
+						builder.AddNavigationPage(useModal);
+					}
+					else
+					{
+						throw new NotSupportedException("This pathway has not been implemented yet, please raise an issue with your navigation code");
+					}
 
-                case nameof(NavigationBuilderExtensions.AddNavigationPage):
-                {
-                    if (call.Arguments.Count == 1)
-                    {
-                        builder.AddNavigationPage();
-                    }
-                    else if (call.Arguments.Count == 2)
-                    {
-                        var useModalArgument = call.Arguments[1];
-                        var useModal = useModalArgument.GetExpressionValue<bool>();
+					break;
+				}
 
-                        builder.AddNavigationPage(useModal);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException("This pathway has not been implemented yet, please raise an issue with your navigation code");
-                    }
-                    break;
-                }
+				case nameof(INavigationBuilder.UseAbsoluteNavigation):
+				{
+					builder.UseAbsoluteNavigation();
+					break;
+				}
 
-                case nameof(INavigationBuilder.UseAbsoluteNavigation):
-                {
-                    builder.UseAbsoluteNavigation();
-                    break;
-                }
+				case nameof(INavigationBuilder.UseRelativeNavigation):
+				{
+					builder.UseRelativeNavigation();
+					break;
+				}
 
-                case nameof(INavigationBuilder.UseRelativeNavigation):
-                {
-                    builder.UseRelativeNavigation();
-                    break;
-                }
+				default:
+				{
+					throw new NotSupportedException($"This api has not been mapped and is not supported ({call.Method.Name})");
+				}
+			}
+		}
 
-                case nameof(INavigationBuilder.AddTabbedSegment):
-                {
-                    throw new NotSupportedException("This api has not been mapped and is not supported");
-                }
-            }
-        }
+		return (builder.Uri, GetBuilderNavigationParameters(builder));
+	}
 
-        return (builder.Uri, GetBuilderNavigationParameters(builder));
-    }
+	private static INavigationParameters? GetBuilderNavigationParameters(INavigationBuilder navigationBuilder)
+	{
+		var navParametersField = navigationBuilder.GetType()
+			.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+			.FirstOrDefault(f => f.FieldType == typeof(INavigationParameters)) ?? throw new InvalidOperationException("Unable to reflect & find _navigationParameters field");
 
-    private static INavigationParameters? GetBuilderNavigationParameters(INavigationBuilder navigationBuilder)
-    {
-        var navParametersField = navigationBuilder.GetType()
-            .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-            .FirstOrDefault(f => f.FieldType == typeof(INavigationParameters));
+		var fieldValue = navParametersField.GetValue(navigationBuilder) as INavigationParameters;
 
-        if (navParametersField is null)
-        {
-            throw new InvalidOperationException("Unable to reflect & find _navigationParameters field");
-        }
+		return fieldValue;
+	}
 
-        var fieldValue = navParametersField.GetValue(navigationBuilder) as INavigationParameters;
+	private static Uri GetNavigationUriFrom(Expression expression)
+	{
+		var methodCall = (MethodCallExpression)((LambdaExpression)expression).Body;
 
-        return fieldValue;
-    }
+		var destination = methodCall.Arguments[1];
 
-    private static Uri GetNavigationUriFrom(Expression expression)
-    {
-        var methodCall = (MethodCallExpression)((LambdaExpression)expression).Body;
+		if (destination.Type == typeof(Uri))
+		{
+			return ExpressionInspector.GetArgOf<Uri>(expression);
+		}
 
-        var destination = methodCall.Arguments[1];
+		if (destination.Type == typeof(string))
+		{
+			var destinationString = ExpressionInspector.GetArgOf<string>(expression);
 
-        if (destination.Type == typeof(Uri))
-        {
-            return ExpressionInspector.GetArgOf<Uri>(expression);
-        }
+			if (Uri.TryCreate(destinationString, UriKind.RelativeOrAbsolute, out var destinationUri))
+			{
+				return destinationUri;
+			}
 
-        if (destination.Type == typeof(string))
-        {
-            var destinationString = ExpressionInspector.GetArgOf<string>(expression);
+			throw new NotSupportedException($"Could not parse destination string as uri: {destinationString}");
+		}
 
-            if (Uri.TryCreate(destinationString, UriKind.RelativeOrAbsolute, out var destinationUri))
-            {
-                return destinationUri;
-            }
-
-            throw new NotSupportedException($"Could not parse destination string as uri: {destinationString}");
-        }
-
-        throw new NotSupportedException("Could not determine navigation destination from expression");
-    }
+		throw new NotSupportedException("Could not determine navigation destination from expression");
+	}
 }

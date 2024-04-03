@@ -1,5 +1,16 @@
 <Project>
-  <PropertyGroup>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-  </PropertyGroup>
+	<PropertyGroup>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<MauiVersion>8.0.14</MauiVersion>
+		<StandardTargetFramework>net8.0</StandardTargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup Condition=" $(UseMaui) == 'true' ">
+		<PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)"/>
+		<PackageVersion Include="Microsoft.Maui.Controls" Version="$(MauiVersion)"/>
+	</ItemGroup>
 </Project>

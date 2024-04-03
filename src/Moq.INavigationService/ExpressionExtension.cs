@@ -1,21 +1,26 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 namespace Moq;
 
-public static class ExpressionExtension
+internal static class ExpressionExtension
 {
-    public static T? GetExpressionValue<T>(this Expression expression)
-    {
-        try
-        {
-            var value = Expression.Lambda(expression)
-                .Compile()
-                .DynamicInvoke();
+	public static T? GetExpressionValue<T>(this Expression expression)
+	{
+		try
+		{
+			var value = Expression.Lambda(expression)
+				.Compile()
+				.DynamicInvoke();
 
-            return (T)value;
-        }
-        catch
-        {
-            return default;
-        }
-    }
+			if (value is null)
+			{
+				return default;
+			}
+
+			return (T)value;
+		}
+		catch
+		{
+			return default;
+		}
+	}
 }

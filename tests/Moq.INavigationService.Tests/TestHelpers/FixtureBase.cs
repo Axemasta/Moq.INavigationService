@@ -1,15 +1,15 @@
-﻿namespace Moq.Tests.TestHelpers;
+namespace Moq.Tests.TestHelpers;
 
 public abstract class FixtureBase<TSut>
 {
-    private Lazy<TSut> SutLazy { get; }
+	private Lazy<TSut> SutLazy { get; }
 
-    protected TSut Sut => SutLazy.Value;
+	protected TSut Sut => SutLazy.Value;
 
-    public FixtureBase()
-    {
-        SutLazy = new Lazy<TSut>(CreateSystemUnderTest, LazyThreadSafetyMode.ExecutionAndPublication);
-    }
+	public FixtureBase()
+	{
+		SutLazy = new Lazy<TSut>(CreateSystemUnderTest, LazyThreadSafetyMode.ExecutionAndPublication);
+	}
 
-    public abstract TSut CreateSystemUnderTest();
+	public abstract TSut CreateSystemUnderTest();
 }

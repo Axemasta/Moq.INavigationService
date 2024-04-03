@@ -1,47 +1,48 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <UseMaui>true</UseMaui>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>$(StandardTargetFramework)</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UseMaui>true</UseMaui>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
 
-  <PropertyGroup Label="NuGet">
-    <AssemblyName>Moq.INavigationService</AssemblyName>
-    <RootNamespace>Moq</RootNamespace>
-    <PackageId>Axemasta.Moq.INavigationService</PackageId>
-    <Summary>Testing library for Prism.Maui's INavigationService using Moq.</Summary>
-    <PackageTags>prism,maui,prism.maui,moq,inavigationservice</PackageTags>
-    <Title>Moq.INavigationService</Title>
-    <Description>Testing library for Prism.Maui's INavigationService using Moq.</Description>
-    <Authors>Axemasta</Authors>
-    <Owners>Axemasta</Owners>
-    <NeutralLanguage>en</NeutralLanguage>
-    <RepositoryUrl>https://github.com/Axemasta/Moq.INavigationService</RepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/Axemasta/Moq.INavigationService</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+	<PropertyGroup Label="NuGet">
+		<AssemblyName>Moq.INavigationService</AssemblyName>
+		<RootNamespace>Moq</RootNamespace>
+		<PackageId>Axemasta.Moq.INavigationService</PackageId>
+		<Summary>Testing library for Prism.Maui's INavigationService using Moq.</Summary>
+		<PackageTags>prism,maui,prism.maui,moq,inavigationservice</PackageTags>
+		<Title>Moq.INavigationService</Title>
+		<Description>Testing library for Prism.Maui's INavigationService using Moq.</Description>
+		<Authors>Axemasta</Authors>
+		<Owners>Axemasta</Owners>
+		<NeutralLanguage>en</NeutralLanguage>
+		<RepositoryUrl>https://github.com/Axemasta/Moq.INavigationService</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageProjectUrl>https://github.com/Axemasta/Moq.INavigationService</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="$(AssemblyName).Tests"/>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Moq" Version="4.20.69" />
-    <PackageReference Include="Prism.Maui" Version="8.1.273-pre" />
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Moq" Version="4.20.70"/>
+		<PackageReference Include="Prism.Maui" Version="9.0.401-pre"/>
+		<PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="FluentAssertions" Version="6.12.0"/>
+	</ItemGroup>
 
 </Project>
