@@ -1,4 +1,4 @@
-﻿using Prism.Common;
+using Prism.Common;
 namespace Moq;
 
 public class MockNavigationService : Mock<INavigationService>, INavigationService, IRegistryAware
@@ -54,11 +54,11 @@ public class MockNavigationService : Mock<INavigationService>, INavigationServic
 	{
 		public IEnumerable<ViewRegistration> Registrations { get; } = new List<ViewRegistration>
 		{
-			new ViewRegistration
+			new()
 			{
-                // Otherwise we run into this exception:
-                // https://github.com/PrismLibrary/Prism/blob/d8d47b8465038c18503761aaba6a68a9bdf35a0c/src/Maui/Prism.Maui/Navigation/Builder/NavigationBuilderExtensions.cs#L88C16-L88C16
-                View = typeof(NavigationPage),
+				// Otherwise we run into this exception:
+				// https://github.com/PrismLibrary/Prism/blob/d8d47b8465038c18503761aaba6a68a9bdf35a0c/src/Maui/Prism.Maui/Navigation/Builder/NavigationBuilderExtensions.cs#L88C16-L88C16
+				View = typeof(NavigationPage),
 			},
 		};
 

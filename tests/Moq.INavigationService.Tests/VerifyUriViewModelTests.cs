@@ -1,170 +1,169 @@
 using Moq.Tests.Samples;
-
 namespace Moq.Tests;
 
 public class VerifyUriViewModelTests : FixtureBase<SampleUriViewModel>
 {
-    #region Setup
+	#region Setup
 
-    private readonly MockNavigationService navigationService;
+	private readonly MockNavigationService navigationService;
 
-    public VerifyUriViewModelTests()
-    {
-        navigationService = new MockNavigationService();
-    }
+	public VerifyUriViewModelTests()
+	{
+		navigationService = new MockNavigationService();
+	}
 
-    public override SampleUriViewModel CreateSystemUnderTest()
-    {
-        return new SampleUriViewModel(navigationService);
-    }
+	public override SampleUriViewModel CreateSystemUnderTest()
+	{
+		return new SampleUriViewModel(navigationService);
+	}
 
-    #endregion Setup
+	#endregion Setup
 
-    #region Tests
+	#region Tests
 
-    [Fact]
-    public async Task Verify_NavigateToHomePage()
-    {
-        // Arrange
+	[Fact]
+	public async Task Verify_NavigateToHomePage()
+	{
+		// Arrange
 
-        // Act
-        await Sut.NavigateToHomePage();
+		// Act
+		await Sut.NavigateToHomePage();
 
-        // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("HomePage"),
-            Times.Once());
-    }
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("HomePage"),
+			Times.Once());
+	}
 
-    [Fact]
-    public async Task Verify_NavigateToHomePageViaUri()
-    {
-        // Arrange
+	[Fact]
+	public async Task Verify_NavigateToHomePageViaUri()
+	{
+		// Arrange
 
-        // Act
-        await Sut.NavigateToHomePageViaUri();
+		// Act
+		await Sut.NavigateToHomePageViaUri();
 
-        // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync(new Uri("HomePage", UriKind.Relative)),
-            Times.Once());
-    }
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync(new Uri("HomePage", UriKind.Relative)),
+			Times.Once());
+	}
 
-    [Fact]
-    public async Task Verify_NavigateToHomePageWithParameters()
-    {
-        // Arrange
+	[Fact]
+	public async Task Verify_NavigateToHomePageWithParameters()
+	{
+		// Arrange
 
-        // Act
-        await Sut.NavigateToHomePageWithParameters();
+		// Act
+		await Sut.NavigateToHomePageWithParameters();
 
-        // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("HomePage", new NavigationParameters
-            {
-                {
-                    "KeyOne", "Hello World"
-                },
-            }),
-            Times.Once());
-    }
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("HomePage", new NavigationParameters
+			{
+				{
+					"KeyOne", "Hello World"
+				},
+			}),
+			Times.Once());
+	}
 
-    [Fact]
-    public async Task Verify_NavigateToModalHomePage()
-    {
-        // Arrange
+	[Fact]
+	public async Task Verify_NavigateToModalHomePage()
+	{
+		// Arrange
 
-        // Act
-        await Sut.NavigateToModalNavigationHomePage();
+		// Act
+		await Sut.NavigateToModalNavigationHomePage();
 
-        // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
-            {
-                {
-                    KnownNavigationParameters.UseModalNavigation, true
-                },
-            }),
-            Times.Once());
-    }
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
+			{
+				{
+					KnownNavigationParameters.UseModalNavigation, true
+				},
+			}),
+			Times.Once());
+	}
 
-    [Fact]
-    public async Task Verify_NavigateToModalNavigationHomePage()
-    {
-        // Arrange
+	[Fact]
+	public async Task Verify_NavigateToModalNavigationHomePage()
+	{
+		// Arrange
 
-        // Act
-        await Sut.NavigateToModalNavigationHomePage();
+		// Act
+		await Sut.NavigateToModalNavigationHomePage();
 
-        // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
-            {
-                {
-                    KnownNavigationParameters.UseModalNavigation, true
-                },
-            }), Times.Once());
-    }
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("NavigationPage/HomePage", new NavigationParameters
+			{
+				{
+					KnownNavigationParameters.UseModalNavigation, true
+				},
+			}), Times.Once());
+	}
 
-    [Fact]
-    public async Task Verify_NavigateToTabbedPageWithHomePageTab()
-    {
-        // Arrange
+	[Fact]
+	public async Task Verify_NavigateToTabbedPageWithHomePageTab()
+	{
+		// Arrange
 
-        // Act
-        await Sut.NavigateToTabbedPageWithHomePageTab();
+		// Act
+		await Sut.NavigateToTabbedPageWithHomePageTab();
 
-        // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("TabbedPage?createTab=HomePage"),
-            Times.Once());
-    }
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("TabbedPage?createTab=HomePage"),
+			Times.Once());
+	}
 
-    [Fact]
-    public async Task Verify_NavigateToTabbedPageWithManyTabs()
-    {
-        // Arrange
+	[Fact]
+	public async Task Verify_NavigateToTabbedPageWithManyTabs()
+	{
+		// Arrange
 
-        // Act
-        await Sut.NavigateToTabbedPageWithManyTabs();
+		// Act
+		await Sut.NavigateToTabbedPageWithManyTabs();
 
-        // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("TabbedPage?createTab=HomePage&createTab=HelloPage"),
-            Times.Once());
-    }
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("TabbedPage?createTab=HomePage&createTab=HelloPage"),
+			Times.Once());
+	}
 
-    [Fact]
-    public async Task Verify_NavigateToTabbedPageWithManyTabsAndNavigationPages()
-    {
-        // Arrange
+	[Fact]
+	public async Task Verify_NavigateToTabbedPageWithManyTabsAndNavigationPages()
+	{
+		// Arrange
 
-        // Act
-        await Sut.NavigateToTabbedPageWithManyTabsAndNavigationPages();
+		// Act
+		await Sut.NavigateToTabbedPageWithManyTabsAndNavigationPages();
 
-        // Assert
-        navigationService.VerifyNavigation(
-            nav => nav.NavigateAsync("TabbedPage?createTab=NavigationPage|HomePage&createTab=NavigationPage|HelloPage"),
-            Times.Once());
-    }
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("TabbedPage?createTab=NavigationPage|HomePage&createTab=NavigationPage|HelloPage"),
+			Times.Once());
+	}
 
-    [Fact]
-    public async Task Verify_WhenVerificationDoesntMatchSetup_ShouldThrow()
-    {
-        // Arrange
-        await Sut.NavigateToHomePage();
+	[Fact]
+	public async Task Verify_WhenVerificationDoesntMatchSetup_ShouldThrow()
+	{
+		// Arrange
+		await Sut.NavigateToHomePage();
 
-        // Act
-        var ex = Record.Exception(() =>
-        {
-            navigationService.VerifyNavigation(
-                nav => nav.NavigateAsync("NotTheHomePage"),
-                Times.Once());
-        });
+		// Act
+		var ex = Record.Exception(() =>
+		{
+			navigationService.VerifyNavigation(
+				nav => nav.NavigateAsync("NotTheHomePage"),
+				Times.Once());
+		});
 
-        // Assert
-        Assert.IsType<VerifyNavigationException>(ex);
-    }
+		// Assert
+		Assert.IsType<VerifyNavigationException>(ex);
+	}
 
-    #endregion Tests
+	#endregion Tests
 }
