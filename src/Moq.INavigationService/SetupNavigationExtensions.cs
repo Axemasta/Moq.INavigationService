@@ -3,7 +3,7 @@ using Moq.Language.Flow;
 namespace Moq;
 
 /// <summary>
-/// Setup Methods For The Mock <see cref="INavigationService"/>
+/// Setup Methods For The Mock <see cref="INavigationService" />
 /// </summary>
 public static class SetupNavigationExtensions
 {
@@ -26,7 +26,8 @@ public static class SetupNavigationExtensions
 	}
 
 	/// <summary>
-	/// This setup method will ensure all navigation calls will return a failed <see cref="INavigationResult"/> with the given exception.
+	/// This setup method will ensure all navigation calls will return a failed
+	/// <see cref="INavigationResult" /> with the given exception.
 	/// </summary>
 	/// <param name="navigationServiceMock">The mock navigation service</param>
 	/// <param name="exception">The exception that caused the navigation failure</param>
@@ -45,7 +46,7 @@ public static class SetupNavigationExtensions
 	}
 
 	/// <summary>
-	/// Setup Navigation For The Given <see cref="Uri"/>
+	/// Setup Navigation For The Given <see cref="Uri" />
 	/// </summary>
 	/// <param name="navigationServiceMock">The mock navigation service</param>
 	/// <param name="destination">The destination uri</param>
@@ -56,7 +57,7 @@ public static class SetupNavigationExtensions
 	}
 
 	/// <summary>
-	/// Setup Navigation For The Given <see cref="Uri"/> &amp; <see cref="INavigationParameters"/>
+	/// Setup Navigation For The Given <see cref="Uri" /> &amp; <see cref="INavigationParameters" />
 	/// </summary>
 	/// <param name="navigationServiceMock">The mock navigation service</param>
 	/// <param name="destination">The destination uri</param>
@@ -73,7 +74,10 @@ public static class SetupNavigationExtensions
 	/// <param name="navigationServiceMock">The mock navigation service</param>
 	/// <param name="destination">The destination string</param>
 	/// <returns>Moq Setup</returns>
-	/// <exception cref="NotSupportedException">This will be thrown if the string is not a valid <see cref="Uri"/></exception>
+	/// <exception cref="NotSupportedException">
+	/// This will be thrown if the string is not a valid
+	/// <see cref="Uri" />
+	/// </exception>
 	public static ISetup<INavigationService, Task<INavigationResult>> SetupNavigation(this Mock<INavigationService> navigationServiceMock, string destination)
 	{
 		if (!Uri.TryCreate(destination, UriKind.RelativeOrAbsolute, out var destinationUri))
@@ -85,13 +89,16 @@ public static class SetupNavigationExtensions
 	}
 
 	/// <summary>
-	/// Setup Navigation For The Given Destination String &amp; <see cref="INavigationParameters"/>
+	/// Setup Navigation For The Given Destination String &amp; <see cref="INavigationParameters" />
 	/// </summary>
 	/// <param name="navigationServiceMock">The mock navigation service</param>
 	/// <param name="destination">The destination string</param>
 	/// <param name="navigationParameters">The expected parameters</param>
 	/// <returns>Moq Setup</returns>
-	/// <exception cref="NotSupportedException">This will be thrown if the string is not a valid <see cref="Uri"/></exception>
+	/// <exception cref="NotSupportedException">
+	/// This will be thrown if the string is not a valid
+	/// <see cref="Uri" />
+	/// </exception>
 	public static ISetup<INavigationService, Task<INavigationResult>> SetupNavigation(this Mock<INavigationService> navigationServiceMock, string destination, INavigationParameters navigationParameters)
 	{
 		if (!Uri.TryCreate(destination, UriKind.RelativeOrAbsolute, out var destinationUri))

@@ -4,7 +4,7 @@ using System.Text;
 namespace Moq;
 
 /// <summary>
-/// Setup Methods For The Mock <see cref="INavigationService"/>
+/// Setup Methods For The Mock <see cref="INavigationService" />
 /// </summary>
 public static class VerifyNavigationExtensions
 {

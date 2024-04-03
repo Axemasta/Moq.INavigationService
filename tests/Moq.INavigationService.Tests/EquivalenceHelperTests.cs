@@ -26,66 +26,65 @@ public class EquivalenceHelperTests(ITestOutputHelper testOutputHelper)
 	{
 		{
 			// Both are null, expect true
-			null,
-			null,
-			true
+			null, null, true
 		},
 		{
 			// Both object are Uri, same value, expect true
-			new Uri("navigation://NavigationPage/HomePage"),
-			new Uri("navigation://NavigationPage/HomePage"),
-			true
+			new Uri("navigation://NavigationPage/HomePage"), new Uri("navigation://NavigationPage/HomePage"), true
 		},
 		{
 			// One object is Uri, other is null, expect false
-			new Uri("navigation://NavigationPage/HomePage"),
-			null,
-			false
+			new Uri("navigation://NavigationPage/HomePage"), null, false
 		},
 		{
 			// One object is Uri, other is null, expect false
-			null,
-			new Uri("navigation://NavigationPage/HomePage"),
-			false
+			null, new Uri("navigation://NavigationPage/HomePage"), false
 		},
 		{
 			// Both object are Uri, different values, expect false
-			new Uri("navigation://NavigationPage/HomePage"),
-			new Uri("https://www.github.com"),
-			false
+			new Uri("navigation://NavigationPage/HomePage"), new Uri("https://www.github.com"), false
 		},
 		{
 			// Both object are NavigationParameters, same values, expect true
-			new NavigationParameters()
+			new NavigationParameters
 			{
-				{ "KeyOne", "Hello World" },
+				{
+					"KeyOne", "Hello World"
+				},
 			},
-			new NavigationParameters()
+			new NavigationParameters
 			{
-				{ "KeyOne", "Hello World" },
+				{
+					"KeyOne", "Hello World"
+				},
 			},
 			true
 		},
 		{
 			// Both object are NavigationParameters, different values, expect false
-			new NavigationParameters()
+			new NavigationParameters
 			{
-				{ "KeyOne", "Hello World" },
+				{
+					"KeyOne", "Hello World"
+				},
 			},
-			new NavigationParameters()
+			new NavigationParameters
 			{
-				{ "ThisIsANumber", 1928 },
+				{
+					"ThisIsANumber", 1928
+				},
 			},
 			false
 		},
 		{
 			// One object is INavigationParameters, other is null, expect false
-			new NavigationParameters()
+			new NavigationParameters
 			{
-				{ "KeyOne", "Hello World" },
+				{
+					"KeyOne", "Hello World"
+				},
 			},
-			null,
-			false
-		}
+			null, false
+		},
 	};
 }

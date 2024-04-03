@@ -2,43 +2,44 @@ using Prism.Common;
 namespace Moq;
 
 /// <summary>
-/// Mock Navigation Service, Capable of mocking the <see cref="PageNavigationService"/> during a unit test.
+/// Mock Navigation Service, Capable of mocking the <see cref="PageNavigationService" /> during a unit
+/// test.
 /// </summary>
 public class MockNavigationService : Mock<INavigationService>, INavigationService, IRegistryAware
 {
 	#region INavigationService
 
-	/// <inheritdoc/>
+	/// <inheritdoc />
 	public Task<INavigationResult> GoBackAsync(INavigationParameters parameters)
 	{
 		return Object.GoBackAsync(parameters);
 	}
 
-	/// <inheritdoc/>
+	/// <inheritdoc />
 	public Task<INavigationResult> GoBackAsync(string viewName, INavigationParameters parameters)
 	{
 		return Object.GoBackAsync(viewName, parameters);
 	}
 
-	/// <inheritdoc/>
+	/// <inheritdoc />
 	public Task<INavigationResult> GoBackToAsync(string name, INavigationParameters parameters)
 	{
 		return Object.GoBackToAsync(name, parameters);
 	}
 
-	/// <inheritdoc/>
+	/// <inheritdoc />
 	public Task<INavigationResult> GoBackToRootAsync(INavigationParameters parameters)
 	{
 		return Object.GoBackToRootAsync(parameters);
 	}
 
-	/// <inheritdoc/>
+	/// <inheritdoc />
 	public Task<INavigationResult> NavigateAsync(Uri uri, INavigationParameters parameters)
 	{
 		return Object.NavigateAsync(uri, parameters);
 	}
 
-	/// <inheritdoc/>
+	/// <inheritdoc />
 	public Task<INavigationResult> SelectTabAsync(string name, INavigationParameters parameters)
 	{
 		return Object.SelectTabAsync(name, parameters);
@@ -48,7 +49,7 @@ public class MockNavigationService : Mock<INavigationService>, INavigationServic
 
 	#region IRegistryAware
 
-	/// <inheritdoc/>
+	/// <inheritdoc />
 	public IViewRegistry Registry { get; } = new MockViewRegistry();
 
 	#endregion IRegistryAware
