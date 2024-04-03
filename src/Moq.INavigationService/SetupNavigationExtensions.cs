@@ -2,10 +2,18 @@ using System.Linq.Expressions;
 using Moq.Language.Flow;
 namespace Moq;
 
+/// <summary>
+/// Setup Methods For The Mock <see cref="INavigationService"/>
+/// </summary>
 public static class SetupNavigationExtensions
 {
 	#region Public API
 
+	/// <summary>
+	/// This setup method will ensure all navigation calls will return the given result.
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="result">The result that should be returned</param>
 	public static void SetupAllNavigationReturns(this Mock<INavigationService> navigationServiceMock, bool result)
 	{
 		var mockResult = new Mock<INavigationResult>();
@@ -17,6 +25,11 @@ public static class SetupNavigationExtensions
 			.ReturnsAsync(mockResult.Object);
 	}
 
+	/// <summary>
+	/// This setup method will ensure all navigation calls will return a failed <see cref="INavigationResult"/> with the given exception.
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="exception">The exception that caused the navigation failure</param>
 	public static void SetupAllNavigationFails(this Mock<INavigationService> navigationServiceMock, Exception exception)
 	{
 		var mockResult = new Mock<INavigationResult>();
@@ -31,16 +44,36 @@ public static class SetupNavigationExtensions
 			.ReturnsAsync(mockResult.Object);
 	}
 
+	/// <summary>
+	/// Setup Navigation For The Given <see cref="Uri"/>
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="destination">The destination uri</param>
+	/// <returns>Moq Setup</returns>
 	public static ISetup<INavigationService, Task<INavigationResult>> SetupNavigation(this Mock<INavigationService> navigationServiceMock, Uri destination)
 	{
 		return ApplySetup(navigationServiceMock, destination, null);
 	}
 
+	/// <summary>
+	/// Setup Navigation For The Given <see cref="Uri"/> &amp; <see cref="INavigationParameters"/>
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="destination">The destination uri</param>
+	/// <param name="navigationParameters">The expected parameters</param>
+	/// <returns>Moq Setup</returns>
 	public static ISetup<INavigationService, Task<INavigationResult>> SetupNavigation(this Mock<INavigationService> navigationServiceMock, Uri destination, INavigationParameters navigationParameters)
 	{
 		return ApplySetup(navigationServiceMock, destination, navigationParameters);
 	}
 
+	/// <summary>
+	/// Setup Navigation For The Given Destination String
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="destination">The destination string</param>
+	/// <returns>Moq Setup</returns>
+	/// <exception cref="NotSupportedException">This will be thrown if the string is not a valid <see cref="Uri"/></exception>
 	public static ISetup<INavigationService, Task<INavigationResult>> SetupNavigation(this Mock<INavigationService> navigationServiceMock, string destination)
 	{
 		if (!Uri.TryCreate(destination, UriKind.RelativeOrAbsolute, out var destinationUri))
@@ -51,6 +84,14 @@ public static class SetupNavigationExtensions
 		return ApplySetup(navigationServiceMock, destinationUri, null);
 	}
 
+	/// <summary>
+	/// Setup Navigation For The Given Destination String &amp; <see cref="INavigationParameters"/>
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="destination">The destination string</param>
+	/// <param name="navigationParameters">The expected parameters</param>
+	/// <returns>Moq Setup</returns>
+	/// <exception cref="NotSupportedException">This will be thrown if the string is not a valid <see cref="Uri"/></exception>
 	public static ISetup<INavigationService, Task<INavigationResult>> SetupNavigation(this Mock<INavigationService> navigationServiceMock, string destination, INavigationParameters navigationParameters)
 	{
 		if (!Uri.TryCreate(destination, UriKind.RelativeOrAbsolute, out var destinationUri))
@@ -61,6 +102,12 @@ public static class SetupNavigationExtensions
 		return ApplySetup(navigationServiceMock, destinationUri, navigationParameters);
 	}
 
+	/// <summary>
+	/// Setup Navigation For The Navigation Builder
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="expression">The navigation builder expression that is expected</param>
+	/// <returns>Moq Setup</returns>
 	public static ISetup<INavigationService, Task<INavigationResult>> SetupNavigation(this Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression)
 	{
 		GuardVerifyExpressionIsForNavigationExtensions(expression);

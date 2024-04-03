@@ -1,5 +1,9 @@
 namespace Moq;
 
+/// <summary>
+/// Verify Navigation Unexpected Exception
+/// Thrown when an unhandled exception is raised, if you see this thrown please file a bug report.
+/// </summary>
 public class VerifyNavigationUnexpectedException : Exception
 {
 	/// <summary>

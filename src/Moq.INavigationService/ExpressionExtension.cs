@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 namespace Moq;
 
-public static class ExpressionExtension
+internal static class ExpressionExtension
 {
 	public static T? GetExpressionValue<T>(this Expression expression)
 	{

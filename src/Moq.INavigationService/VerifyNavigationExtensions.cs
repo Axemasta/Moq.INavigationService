@@ -3,35 +3,75 @@ using System.Reflection;
 using System.Text;
 namespace Moq;
 
+/// <summary>
+/// Setup Methods For The Mock <see cref="INavigationService"/>
+/// </summary>
 public static class VerifyNavigationExtensions
 {
 	#region VerifyNavigation API
 
+	/// <summary>
+	/// Verify Navigation Expression Was Matched
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="expression">The expression to verify</param>
+	/// <param name="failMessage">The message to display if the expression is not matched</param>
 	public static void VerifyNavigation(this Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression, string failMessage)
 	{
 		Verify(navigationServiceMock, expression, null, null, failMessage);
 	}
 
+	/// <summary>
+	/// Verify Navigation Expression Was Matched
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="expression">The expression to verify</param>
+	/// <param name="times">The expected times the expression should have been matched</param>
 	public static void VerifyNavigation(this Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression, Times times)
 	{
 		Verify(navigationServiceMock, expression, times, null, string.Empty);
 	}
 
+	/// <summary>
+	/// Verify Navigation Expression Was Matched
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="expression">The expression to verify</param>
+	/// <param name="times">The expected times the expression should have been matched</param>
+	/// <param name="failMessage">The message to display if the expression is not matched</param>
 	public static void VerifyNavigation(this Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression, Times times, string failMessage)
 	{
 		Verify(navigationServiceMock, expression, times, null, failMessage);
 	}
 
+	/// <summary>
+	/// Verify Navigation Expression Was Matched
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="expression">The expression to verify</param>
+	/// <param name="times">The expected times the expression should have been matched</param>
 	public static void VerifyNavigation(this Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression, Func<Times> times)
 	{
 		Verify(navigationServiceMock, expression, null, times, string.Empty);
 	}
 
+	/// <summary>
+	/// Verify Navigation Expression Was Matched
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="expression">The expression to verify</param>
+	/// <param name="times">The expected times the expression should have been matched</param>
+	/// <param name="failMessage">The message to display if the expression is not matched</param>
 	public static void VerifyNavigation(this Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression, Func<Times> times, string failMessage)
 	{
 		Verify(navigationServiceMock, expression, null, times, failMessage);
 	}
 
+	/// <summary>
+	/// Verify Navigation Expression Was Matched
+	/// </summary>
+	/// <param name="navigationServiceMock">The mock navigation service</param>
+	/// <param name="expression">The expression to verify</param>
 	public static void VerifyNavigation(this Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression)
 	{
 		Verify(navigationServiceMock, expression, null, null, string.Empty);

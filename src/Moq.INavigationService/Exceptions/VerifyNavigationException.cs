@@ -1,5 +1,9 @@
 namespace Moq;
 
+/// <summary>
+/// Verify Navigation Exception
+/// Thrown when a Moq verification exception is thrown
+/// </summary>
 public class VerifyNavigationException : Exception
 {
 	/// <summary>
