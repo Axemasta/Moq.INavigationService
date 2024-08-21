@@ -113,6 +113,12 @@ public static class VerifyNavigationExtensions
 				break;
 			}
 
+			case nameof(INavigationService.GoBackToAsync):
+			{
+				VerifyGoBackTo(navigationServiceMock, expression, times, timesFunc, failMessage);
+				break;
+			}
+
 			default:
 			{
 				throw new NotImplementedException("Method has no MockNavigation implementation.");
@@ -139,8 +145,8 @@ public static class VerifyNavigationExtensions
 				navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), timesFunc, failMessage);
 			}
 
-			var verifyNavigationExpression = VerifyNavigationExpression.From(expression);
-			var verifyExpression = CreateMoqVerifyExpressionFrom(verifyNavigationExpression);
+			var verifyNavigationExpression = VerifyNavigationExpression.FromNavigateExpression(expression);
+			var verifyExpression = CreateMoqVerifyNavigateAsyncExpressionFrom(verifyNavigationExpression);
 
 			try
 			{
@@ -274,6 +280,55 @@ public static class VerifyNavigationExtensions
 		}
 	}
 
+	private static void VerifyGoBackTo(Mock<INavigationService> navigationServiceMock,
+		Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
+	{
+		GuardVerifyExpressionIsCorrectMethod(expression, nameof(INavigationService.GoBackToAsync));
+
+		if (string.IsNullOrEmpty(failMessage))
+		{
+			failMessage = "Verification failed";
+		}
+
+		try
+		{
+			var verifyNavigationExpression = VerifyNavigationExpression.FromGoBackToExpression(expression);
+			var verifyExpression = CreateMoqVerifyGoBackToExpressionFrom(verifyNavigationExpression);
+
+			try
+			{
+				if (timesFunc is not null)
+				{
+					navigationServiceMock.Verify(verifyExpression, timesFunc, failMessage);
+				}
+				else if (times.HasValue)
+				{
+					navigationServiceMock.Verify(verifyExpression, times.Value, failMessage);
+				}
+				else
+				{
+					navigationServiceMock.Verify(verifyExpression, failMessage);
+				}
+			}
+			catch (MockException mex)
+			{
+				throw new VerifyNavigationException(BuildExceptionMessage(mex, expression), mex);
+			}
+		}
+		catch (NotSupportedException)
+		{
+			throw;
+		}
+		catch (VerifyNavigationException)
+		{
+			throw;
+		}
+		catch (Exception ex)
+		{
+			throw new VerifyNavigationUnexpectedException("Moq.INavigationService encountered an unexpected exception.", ex);
+		}
+	}
+
 	private static void GuardVerifyExpressionIsForNavigationExtensions(Expression expression)
 	{
 		var methodName = expression.GetExpressionMethodName();
@@ -294,7 +349,7 @@ public static class VerifyNavigationExtensions
 		}
 	}
 
-	private static Expression<Action<INavigationService>> CreateMoqVerifyExpressionFrom(VerifyNavigationExpression verifyNavigationExpression)
+	private static Expression<Action<INavigationService>> CreateMoqVerifyNavigateAsyncExpressionFrom(VerifyNavigationExpression verifyNavigationExpression)
 	{
 		var navigationUriExpression = CreateNavigationUriExpression(verifyNavigationExpression);
 		var navigationParametersExpression = CreateNavigationParametersExpression(verifyNavigationExpression);
@@ -305,6 +360,23 @@ public static class VerifyNavigationExtensions
 
 		var navCallExpression = Expression.Call(navParameter, navMethodInfo,
 			navigationUriExpression,
+			navigationParametersExpression);
+
+		var verifyExpression = Expression.Lambda<Action<INavigationService>>(navCallExpression, navParameter);
+
+		return verifyExpression;
+	}
+
+	private static Expression<Action<INavigationService>> CreateMoqVerifyGoBackToExpressionFrom(VerifyNavigationExpression verifyNavigationExpression)
+	{
+		var navigationParametersExpression = CreateNavigationParametersExpression(verifyNavigationExpression);
+
+		var navMethodInfo = typeof(INavigationService).GetMethod(nameof(INavigationService.GoBackToAsync))!;
+
+		var navParameter = Expression.Parameter(typeof(INavigationService), "navigationService");
+
+		var navCallExpression = Expression.Call(navParameter, navMethodInfo,
+			verifyNavigationExpression.DestinationStringExpression!,
 			navigationParametersExpression);
 
 		var verifyExpression = Expression.Lambda<Action<INavigationService>>(navCallExpression, navParameter);

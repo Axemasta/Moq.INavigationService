@@ -19,11 +19,26 @@ internal class NavigationExpressionArgs
 		};
 	}
 
-	public static NavigationExpressionArgs FromUriExpression(Expression expression)
+	public static NavigationExpressionArgs FromNavigateUriExpression(Expression expression)
 	{
 		return new NavigationExpressionArgs
 		{
-			NavigationUri = GetNavigationUriFrom(expression),
+			NavigationUri = GetNavigationUriFrom(expression, 1),
+			NavigationParameters = ExpressionInspector.GetArgOf<NavigationParameters>(expression),
+		};
+	}
+
+	public static NavigationExpressionArgs FromGoBackToExpression(Expression expression)
+	{
+		var methodCall = (MethodCallExpression)((LambdaExpression)expression).Body;
+
+		var index = methodCall.Arguments.Any(a => a.Type == typeof(NavigationParameters))
+			? 0
+			: 1;
+
+		return new NavigationExpressionArgs
+		{
+			NavigationUri = GetNavigationUriFrom(expression, index),
 			NavigationParameters = ExpressionInspector.GetArgOf<NavigationParameters>(expression),
 		};
 	}
@@ -225,11 +240,11 @@ internal class NavigationExpressionArgs
 		return fieldValue;
 	}
 
-	private static Uri GetNavigationUriFrom(Expression expression)
+	private static Uri GetNavigationUriFrom(Expression expression, int index)
 	{
 		var methodCall = (MethodCallExpression)((LambdaExpression)expression).Body;
 
-		var destination = methodCall.Arguments[1];
+		var destination = methodCall.Arguments[index];
 
 		if (destination.Type == typeof(Uri))
 		{

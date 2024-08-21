@@ -120,7 +120,7 @@ public static class SetupNavigationExtensions
 		GuardVerifyExpressionIsForNavigationExtensions(expression);
 
 		// Workout uri
-		var verifyNavigationExpression = VerifyNavigationExpression.From(expression);
+		var verifyNavigationExpression = VerifyNavigationExpression.FromNavigateExpression(expression);
 
 		return ApplySetup(
 			navigationServiceMock,
