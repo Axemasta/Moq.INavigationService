@@ -23,7 +23,7 @@ internal static class ExpressionExtension
 			return default;
 		}
 	}
-	
+
 	public static string GetExpressionMethodName(this Expression expression)
 	{
 		var methodCall = (expression as LambdaExpression)?.Body as MethodCallExpression;

@@ -140,11 +140,6 @@ public static class VerifyNavigationExtensions
 
 		try
 		{
-			if (expression.GetExpressionMethodName() == nameof(INavigationService.GoBackAsync))
-			{
-				navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), timesFunc, failMessage);
-			}
-
 			var verifyNavigationExpression = VerifyNavigationExpression.FromNavigateExpression(expression);
 			var verifyExpression = CreateMoqVerifyNavigateAsyncExpressionFrom(verifyNavigationExpression);
 
