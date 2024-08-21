@@ -107,6 +107,12 @@ public static class VerifyNavigationExtensions
 				break;
 			}
 
+			case nameof(INavigationService.GoBackToRootAsync):
+			{
+				VerifyGoBackToRoot(navigationServiceMock, expression, times, timesFunc, failMessage);
+				break;
+			}
+
 			default:
 			{
 				throw new NotImplementedException("Method has no MockNavigation implementation.");
@@ -182,6 +188,7 @@ public static class VerifyNavigationExtensions
 
 		try
 		{
+			// This passes a new navparam object when null
 			var navParams = ExpressionInspector.GetArgOf<NavigationParameters>(expression) ?? new();
 
 			try
@@ -197,6 +204,55 @@ public static class VerifyNavigationExtensions
 				else
 				{
 					navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(navParams), failMessage);
+				}
+			}
+			catch (MockException mex)
+			{
+				throw new VerifyNavigationException(BuildExceptionMessage(mex, expression), mex);
+			}
+		}
+		catch (NotSupportedException)
+		{
+			throw;
+		}
+		catch (VerifyNavigationException)
+		{
+			throw;
+		}
+		catch (Exception ex)
+		{
+			throw new VerifyNavigationUnexpectedException("Moq.INavigationService encountered an unexpected exception.", ex);
+		}
+	}
+
+	private static void VerifyGoBackToRoot(Mock<INavigationService> navigationServiceMock,
+		Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
+	{
+		GuardVerifyExpressionIsCorrectMethod(expression, nameof(INavigationService.GoBackToRootAsync));
+
+		if (string.IsNullOrEmpty(failMessage))
+		{
+			failMessage = "Verification failed";
+		}
+
+		try
+		{
+			// This passes null when no parameters passed
+			var navParams = ExpressionInspector.GetArgOf<NavigationParameters>(expression);
+
+			try
+			{
+				if (timesFunc is not null)
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackToRootAsync(navParams), timesFunc, failMessage);
+				}
+				else if (times.HasValue)
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackToRootAsync(navParams), times.Value, failMessage);
+				}
+				else
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackToRootAsync(navParams), failMessage);
 				}
 			}
 			catch (MockException mex)
