@@ -8,18 +8,29 @@ internal class VerifyNavigationExpression
 	public required Expression? DestinationUriExpression { get; set; }
 	public required Expression? NavigationParametersExpression { get; set; }
 
-	public static VerifyNavigationExpression From(Expression expression)
+	public static VerifyNavigationExpression FromNavigateExpression(Expression expression)
 	{
 		return expression.ToString().Contains("CreateBuilder")
 			? ParseNavigationBuilderExpression(expression)
 			: ParseUriNavigationExpression(expression);
 	}
 
+	public static VerifyNavigationExpression FromGoBackToExpression(Expression expression)
+	{
+		return new VerifyNavigationExpression
+		{
+			Args = NavigationExpressionArgs.FromGoBackToExpression(expression),
+			DestinationStringExpression = ExpressionInspector.GetArgExpressionOf<string>(expression),
+			DestinationUriExpression = null,
+			NavigationParametersExpression = ExpressionInspector.GetArgExpressionOf<NavigationParameters>(expression),
+		};
+	}
+
 	private static VerifyNavigationExpression ParseUriNavigationExpression(Expression expression)
 	{
 		return new VerifyNavigationExpression
 		{
-			Args = NavigationExpressionArgs.FromUriExpression(expression),
+			Args = NavigationExpressionArgs.FromNavigateUriExpression(expression),
 			DestinationStringExpression = ExpressionInspector.GetArgExpressionOf<string>(expression),
 			DestinationUriExpression = ExpressionInspector.GetArgExpressionOf<Uri>(expression),
 			NavigationParametersExpression = ExpressionInspector.GetArgExpressionOf<NavigationParameters>(expression),

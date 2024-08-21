@@ -23,4 +23,12 @@ internal static class ExpressionExtension
 			return default;
 		}
 	}
+
+	public static string GetExpressionMethodName(this Expression expression)
+	{
+		var methodCall = (expression as LambdaExpression)?.Body as MethodCallExpression;
+		var methodName = methodCall?.Method.Name ?? throw new InvalidOperationException("Could not determine calling method name");
+
+		return methodName;
+	}
 }

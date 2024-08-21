@@ -16,15 +16,9 @@ public class MockNavigationService : Mock<INavigationService>, INavigationServic
 	}
 
 	/// <inheritdoc />
-	public Task<INavigationResult> GoBackAsync(string viewName, INavigationParameters parameters)
+	public Task<INavigationResult> GoBackToAsync(string viewName, INavigationParameters parameters)
 	{
-		return Object.GoBackAsync(viewName, parameters);
-	}
-
-	/// <inheritdoc />
-	public Task<INavigationResult> GoBackToAsync(string name, INavigationParameters parameters)
-	{
-		return Object.GoBackToAsync(name, parameters);
+		return Object.GoBackToAsync(viewName, parameters);
 	}
 
 	/// <inheritdoc />
@@ -40,9 +34,9 @@ public class MockNavigationService : Mock<INavigationService>, INavigationServic
 	}
 
 	/// <inheritdoc />
-	public Task<INavigationResult> SelectTabAsync(string name, INavigationParameters parameters)
+	public Task<INavigationResult> SelectTabAsync(string name, Uri uri, INavigationParameters parameters)
 	{
-		return Object.SelectTabAsync(name, parameters);
+		return Object.SelectTabAsync(name, uri, parameters);
 	}
 
 	#endregion INavigationService

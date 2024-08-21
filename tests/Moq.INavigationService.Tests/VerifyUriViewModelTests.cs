@@ -165,5 +165,95 @@ public class VerifyUriViewModelTests : FixtureBase<SampleUriViewModel>
 		Assert.IsType<VerifyNavigationException>(ex);
 	}
 
+	[Fact]
+	public async Task Verify_GoBackWithNoParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackWithNoParameters();
+
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackAsync(),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_GoBackToWithNoParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackToWithNoParameters();
+
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackToAsync("DestinationPage"),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_GoBackToRootWithNoParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackToRootWithNoParameters();
+
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackToRootAsync(),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_GoBackWithParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackWithParameters();
+
+		// Assert
+		var expectedParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackAsync(expectedParams),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_GoBackToWithParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackToWithParameters();
+
+		// Assert
+		var expectedParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackToAsync("DestinationPage", expectedParams),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_GoBackToRootWithParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackToRootWithParameters();
+
+		// Assert
+		var expectedParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackToRootAsync(expectedParams),
+			Times.Once());
+	}
+
 	#endregion Tests
 }

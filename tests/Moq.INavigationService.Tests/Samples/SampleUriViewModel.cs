@@ -85,4 +85,40 @@ public class SampleUriViewModel(INavigationService navigationService)
 	{
 		return await navigationService.NavigateAsync("TabbedPage?createTab=NavigationPage|HomePage&createTab=NavigationPage|HelloPage");
 	}
+
+	public async Task<INavigationResult> GoBackWithNoParameters()
+	{
+		return await navigationService.GoBackAsync();
+	}
+
+	public async Task<INavigationResult> GoBackToWithNoParameters()
+	{
+		return await navigationService.GoBackToAsync("DestinationPage");
+	}
+
+	public async Task<INavigationResult> GoBackToRootWithNoParameters()
+	{
+		return await navigationService.GoBackToRootAsync();
+	}
+
+	public async Task<INavigationResult> GoBackWithParameters()
+	{
+		var navParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		return await navigationService.GoBackAsync(navParams);
+	}
+
+	public async Task<INavigationResult> GoBackToWithParameters()
+	{
+		var navParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		return await navigationService.GoBackToAsync("DestinationPage", navParams);
+	}
+
+	public async Task<INavigationResult> GoBackToRootWithParameters()
+	{
+		var navParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		return await navigationService.GoBackToRootAsync(navParams);
+	}
 }

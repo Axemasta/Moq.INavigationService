@@ -79,9 +79,59 @@ public static class VerifyNavigationExtensions
 
 	#endregion VerifyNavigation API
 
+	private static readonly string[] SupportedMethods = new[]
+	{
+		nameof(INavigationService.NavigateAsync),
+		nameof(INavigationService.GoBackAsync),
+		nameof(INavigationService.GoBackToRootAsync),
+		nameof(INavigationService.GoBackToAsync),
+	};
+
 	private static void Verify(Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
 	{
 		GuardVerifyExpressionIsForNavigationExtensions(expression);
+
+		var methodName = expression.GetExpressionMethodName();
+
+		switch (methodName)
+		{
+			case nameof(INavigationService.NavigateAsync):
+			{
+				VerifyNavigation(navigationServiceMock, expression, times, timesFunc, failMessage);
+				break;
+			}
+
+			case nameof(INavigationService.GoBackAsync):
+			{
+				VerifyGoBack(navigationServiceMock, expression, times, timesFunc, failMessage);
+				break;
+			}
+
+			case nameof(INavigationService.GoBackToRootAsync):
+			{
+				VerifyGoBackToRoot(navigationServiceMock, expression, times, timesFunc, failMessage);
+				break;
+			}
+
+			case nameof(INavigationService.GoBackToAsync):
+			{
+				VerifyGoBackTo(navigationServiceMock, expression, times, timesFunc, failMessage);
+				break;
+			}
+
+			default:
+			{
+				throw new NotImplementedException("Method has no MockNavigation implementation.");
+			}
+		}
+
+
+	}
+
+	private static void VerifyNavigation(Mock<INavigationService> navigationServiceMock,
+		Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
+	{
+		GuardVerifyExpressionIsCorrectMethod(expression, nameof(INavigationService.NavigateAsync));
 
 		if (string.IsNullOrEmpty(failMessage))
 		{
@@ -90,8 +140,155 @@ public static class VerifyNavigationExtensions
 
 		try
 		{
-			var verifyNavigationExpression = VerifyNavigationExpression.From(expression);
-			var verifyExpression = CreateMoqVerifyExpressionFrom(verifyNavigationExpression);
+			var verifyNavigationExpression = VerifyNavigationExpression.FromNavigateExpression(expression);
+			var verifyExpression = CreateMoqVerifyNavigateAsyncExpressionFrom(verifyNavigationExpression);
+
+			try
+			{
+				if (timesFunc is not null)
+				{
+					navigationServiceMock.Verify(verifyExpression, timesFunc, failMessage);
+				}
+				else if (times.HasValue)
+				{
+					navigationServiceMock.Verify(verifyExpression, times.Value, failMessage);
+				}
+				else
+				{
+					navigationServiceMock.Verify(verifyExpression, failMessage);
+				}
+			}
+			catch (MockException mex)
+			{
+				throw new VerifyNavigationException(BuildExceptionMessage(mex, expression), mex);
+			}
+		}
+		catch (NotSupportedException)
+		{
+			throw;
+		}
+		catch (VerifyNavigationException)
+		{
+			throw;
+		}
+		catch (Exception ex)
+		{
+			throw new VerifyNavigationUnexpectedException("Moq.INavigationService encountered an unexpected exception.", ex);
+		}
+	}
+
+	private static void VerifyGoBack(Mock<INavigationService> navigationServiceMock,
+		Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
+	{
+		GuardVerifyExpressionIsCorrectMethod(expression, nameof(INavigationService.GoBackAsync));
+
+		if (string.IsNullOrEmpty(failMessage))
+		{
+			failMessage = "Verification failed";
+		}
+
+		try
+		{
+			// This passes a new navparam object when null
+			var navParams = ExpressionInspector.GetArgOf<NavigationParameters>(expression) ?? new();
+
+			try
+			{
+				if (timesFunc is not null)
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(navParams), timesFunc, failMessage);
+				}
+				else if (times.HasValue)
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(navParams), times.Value, failMessage);
+				}
+				else
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(navParams), failMessage);
+				}
+			}
+			catch (MockException mex)
+			{
+				throw new VerifyNavigationException(BuildExceptionMessage(mex, expression), mex);
+			}
+		}
+		catch (NotSupportedException)
+		{
+			throw;
+		}
+		catch (VerifyNavigationException)
+		{
+			throw;
+		}
+		catch (Exception ex)
+		{
+			throw new VerifyNavigationUnexpectedException("Moq.INavigationService encountered an unexpected exception.", ex);
+		}
+	}
+
+	private static void VerifyGoBackToRoot(Mock<INavigationService> navigationServiceMock,
+		Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
+	{
+		GuardVerifyExpressionIsCorrectMethod(expression, nameof(INavigationService.GoBackToRootAsync));
+
+		if (string.IsNullOrEmpty(failMessage))
+		{
+			failMessage = "Verification failed";
+		}
+
+		try
+		{
+			// This passes null when no parameters passed
+			var navParams = ExpressionInspector.GetArgOf<NavigationParameters>(expression);
+
+			try
+			{
+				if (timesFunc is not null)
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackToRootAsync(navParams), timesFunc, failMessage);
+				}
+				else if (times.HasValue)
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackToRootAsync(navParams), times.Value, failMessage);
+				}
+				else
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackToRootAsync(navParams), failMessage);
+				}
+			}
+			catch (MockException mex)
+			{
+				throw new VerifyNavigationException(BuildExceptionMessage(mex, expression), mex);
+			}
+		}
+		catch (NotSupportedException)
+		{
+			throw;
+		}
+		catch (VerifyNavigationException)
+		{
+			throw;
+		}
+		catch (Exception ex)
+		{
+			throw new VerifyNavigationUnexpectedException("Moq.INavigationService encountered an unexpected exception.", ex);
+		}
+	}
+
+	private static void VerifyGoBackTo(Mock<INavigationService> navigationServiceMock,
+		Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
+	{
+		GuardVerifyExpressionIsCorrectMethod(expression, nameof(INavigationService.GoBackToAsync));
+
+		if (string.IsNullOrEmpty(failMessage))
+		{
+			failMessage = "Verification failed";
+		}
+
+		try
+		{
+			var verifyNavigationExpression = VerifyNavigationExpression.FromGoBackToExpression(expression);
+			var verifyExpression = CreateMoqVerifyGoBackToExpressionFrom(verifyNavigationExpression);
 
 			try
 			{
@@ -129,16 +326,25 @@ public static class VerifyNavigationExtensions
 
 	private static void GuardVerifyExpressionIsForNavigationExtensions(Expression expression)
 	{
-		var methodCall = (expression as LambdaExpression)?.Body as MethodCallExpression;
-		var methodName = methodCall?.Method.Name ?? throw new InvalidOperationException("Could not determine calling method name");
+		var methodName = expression.GetExpressionMethodName();
 
-		if (!methodName.Equals(nameof(INavigationService.NavigateAsync), StringComparison.Ordinal))
+		if (!SupportedMethods.Contains(methodName))
 		{
-			throw new NotSupportedException($"Calling method named {methodName} is not supported, only {nameof(INavigationService.NavigateAsync)} needs to use mock expressions.");
+			throw new NotSupportedException($"Calling method named {methodName} is not supported, The following methods are supported for verification: {string.Join(", ", SupportedMethods)}");
 		}
 	}
 
-	private static Expression<Action<INavigationService>> CreateMoqVerifyExpressionFrom(VerifyNavigationExpression verifyNavigationExpression)
+	private static void GuardVerifyExpressionIsCorrectMethod(Expression expression, string correctMethodName)
+	{
+		var methodName = expression.GetExpressionMethodName();
+
+		if (!methodName.Equals(correctMethodName, StringComparison.Ordinal))
+		{
+			throw new NotSupportedException($"Method name did not match expected method name {correctMethodName}, please file an issue");
+		}
+	}
+
+	private static Expression<Action<INavigationService>> CreateMoqVerifyNavigateAsyncExpressionFrom(VerifyNavigationExpression verifyNavigationExpression)
 	{
 		var navigationUriExpression = CreateNavigationUriExpression(verifyNavigationExpression);
 		var navigationParametersExpression = CreateNavigationParametersExpression(verifyNavigationExpression);
@@ -149,6 +355,23 @@ public static class VerifyNavigationExtensions
 
 		var navCallExpression = Expression.Call(navParameter, navMethodInfo,
 			navigationUriExpression,
+			navigationParametersExpression);
+
+		var verifyExpression = Expression.Lambda<Action<INavigationService>>(navCallExpression, navParameter);
+
+		return verifyExpression;
+	}
+
+	private static Expression<Action<INavigationService>> CreateMoqVerifyGoBackToExpressionFrom(VerifyNavigationExpression verifyNavigationExpression)
+	{
+		var navigationParametersExpression = CreateNavigationParametersExpression(verifyNavigationExpression);
+
+		var navMethodInfo = typeof(INavigationService).GetMethod(nameof(INavigationService.GoBackToAsync))!;
+
+		var navParameter = Expression.Parameter(typeof(INavigationService), "navigationService");
+
+		var navCallExpression = Expression.Call(navParameter, navMethodInfo,
+			verifyNavigationExpression.DestinationStringExpression!,
 			navigationParametersExpression);
 
 		var verifyExpression = Expression.Lambda<Action<INavigationService>>(navCallExpression, navParameter);
