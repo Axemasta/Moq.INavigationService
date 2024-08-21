@@ -100,4 +100,25 @@ public class SampleUriViewModel(INavigationService navigationService)
 	{
 		return await navigationService.GoBackToRootAsync();
 	}
+
+	public async Task<INavigationResult> GoBackWithParameters()
+	{
+		var navParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		return await navigationService.GoBackAsync(navParams);
+	}
+
+	public async Task<INavigationResult> GoBackToWithParameters()
+	{
+		var navParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		return await navigationService.GoBackToAsync("DestinationPage", navParams);
+	}
+
+	public async Task<INavigationResult> GoBackToRootWithParameters()
+	{
+		var navParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		return await navigationService.GoBackToRootAsync(navParams);
+	}
 }

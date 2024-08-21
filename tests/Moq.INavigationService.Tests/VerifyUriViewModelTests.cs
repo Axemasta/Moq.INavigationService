@@ -207,5 +207,53 @@ public class VerifyUriViewModelTests : FixtureBase<SampleUriViewModel>
 			Times.Once());
 	}
 
+	[Fact]
+	public async Task Verify_GoBackWithParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackWithParameters();
+
+		// Assert
+		var expectedParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackAsync(expectedParams),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_GoBackToWithParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackToWithParameters();
+
+		// Assert
+		var expectedParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackToAsync("DestinationPage", expectedParams),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_GoBackToRootWithParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackToRootWithParameters();
+
+		// Assert
+		var expectedParams = new NavigationParameters() { { "KeyOne", "ValueOne" } };
+
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackToRootAsync(expectedParams),
+			Times.Once());
+	}
+
 	#endregion Tests
 }

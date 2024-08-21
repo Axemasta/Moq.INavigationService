@@ -106,6 +106,11 @@ public static class VerifyNavigationExtensions
 				VerifyGoBack(navigationServiceMock, expression, times, timesFunc, failMessage);
 				break;
 			}
+
+			default:
+			{
+				throw new NotImplementedException("Method has no MockNavigation implementation.");
+			}
 		}
 
 
