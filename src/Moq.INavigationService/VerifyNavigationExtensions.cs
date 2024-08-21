@@ -79,9 +79,42 @@ public static class VerifyNavigationExtensions
 
 	#endregion VerifyNavigation API
 
+	private static readonly string[] SupportedMethods = new[]
+	{
+		nameof(INavigationService.NavigateAsync),
+		nameof(INavigationService.GoBackAsync),
+		nameof(INavigationService.GoBackToRootAsync),
+		nameof(INavigationService.GoBackToAsync),
+	};
+
 	private static void Verify(Mock<INavigationService> navigationServiceMock, Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
 	{
 		GuardVerifyExpressionIsForNavigationExtensions(expression);
+
+		var methodName = expression.GetExpressionMethodName();
+
+		switch (methodName)
+		{
+			case nameof(INavigationService.NavigateAsync):
+			{
+				VerifyNavigation(navigationServiceMock, expression, times, timesFunc, failMessage);
+				break;
+			}
+
+			case nameof(INavigationService.GoBackAsync):
+			{
+				VerifyGoBack(navigationServiceMock, expression, times, timesFunc, failMessage);
+				break;
+			}
+		}
+
+
+	}
+
+	private static void VerifyNavigation(Mock<INavigationService> navigationServiceMock,
+		Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
+	{
+		GuardVerifyExpressionIsCorrectMethod(expression, nameof(INavigationService.NavigateAsync));
 
 		if (string.IsNullOrEmpty(failMessage))
 		{
@@ -90,6 +123,11 @@ public static class VerifyNavigationExtensions
 
 		try
 		{
+			if (expression.GetExpressionMethodName() == nameof(INavigationService.GoBackAsync))
+			{
+				navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(), timesFunc, failMessage);
+			}
+
 			var verifyNavigationExpression = VerifyNavigationExpression.From(expression);
 			var verifyExpression = CreateMoqVerifyExpressionFrom(verifyNavigationExpression);
 
@@ -127,14 +165,71 @@ public static class VerifyNavigationExtensions
 		}
 	}
 
+	private static void VerifyGoBack(Mock<INavigationService> navigationServiceMock,
+		Expression<Action<INavigationService>> expression, Times? times, Func<Times>? timesFunc, string failMessage)
+	{
+		GuardVerifyExpressionIsCorrectMethod(expression, nameof(INavigationService.GoBackAsync));
+
+		if (string.IsNullOrEmpty(failMessage))
+		{
+			failMessage = "Verification failed";
+		}
+
+		try
+		{
+			var navParams = ExpressionInspector.GetArgOf<NavigationParameters>(expression) ?? new();
+
+			try
+			{
+				if (timesFunc is not null)
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(navParams), timesFunc, failMessage);
+				}
+				else if (times.HasValue)
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(navParams), times.Value, failMessage);
+				}
+				else
+				{
+					navigationServiceMock.Verify(navigationService => navigationService.GoBackAsync(navParams), failMessage);
+				}
+			}
+			catch (MockException mex)
+			{
+				throw new VerifyNavigationException(BuildExceptionMessage(mex, expression), mex);
+			}
+		}
+		catch (NotSupportedException)
+		{
+			throw;
+		}
+		catch (VerifyNavigationException)
+		{
+			throw;
+		}
+		catch (Exception ex)
+		{
+			throw new VerifyNavigationUnexpectedException("Moq.INavigationService encountered an unexpected exception.", ex);
+		}
+	}
+
 	private static void GuardVerifyExpressionIsForNavigationExtensions(Expression expression)
 	{
-		var methodCall = (expression as LambdaExpression)?.Body as MethodCallExpression;
-		var methodName = methodCall?.Method.Name ?? throw new InvalidOperationException("Could not determine calling method name");
+		var methodName = expression.GetExpressionMethodName();
 
-		if (!methodName.Equals(nameof(INavigationService.NavigateAsync), StringComparison.Ordinal))
+		if (!SupportedMethods.Contains(methodName))
 		{
-			throw new NotSupportedException($"Calling method named {methodName} is not supported, only {nameof(INavigationService.NavigateAsync)} needs to use mock expressions.");
+			throw new NotSupportedException($"Calling method named {methodName} is not supported, The following methods are supported for verification: {string.Join(", ", SupportedMethods)}");
+		}
+	}
+
+	private static void GuardVerifyExpressionIsCorrectMethod(Expression expression, string correctMethodName)
+	{
+		var methodName = expression.GetExpressionMethodName();
+
+		if (!methodName.Equals(correctMethodName, StringComparison.Ordinal))
+		{
+			throw new NotSupportedException($"Method name did not match expected method name {correctMethodName}, please file an issue");
 		}
 	}
 

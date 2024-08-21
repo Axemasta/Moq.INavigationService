@@ -165,5 +165,47 @@ public class VerifyUriViewModelTests : FixtureBase<SampleUriViewModel>
 		Assert.IsType<VerifyNavigationException>(ex);
 	}
 
+	[Fact]
+	public async Task Verify_GoBackWithNoParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackWithNoParameters();
+
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackAsync(),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_GoBackToWithNoParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackToWithNoParameters();
+
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackToAsync("DestinationPage"),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_GoBackToRootWithNoParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.GoBackToRootWithNoParameters();
+
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.GoBackToRootAsync(),
+			Times.Once());
+	}
+
 	#endregion Tests
 }

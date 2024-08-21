@@ -85,4 +85,19 @@ public class SampleUriViewModel(INavigationService navigationService)
 	{
 		return await navigationService.NavigateAsync("TabbedPage?createTab=NavigationPage|HomePage&createTab=NavigationPage|HelloPage");
 	}
+
+	public async Task<INavigationResult> GoBackWithNoParameters()
+	{
+		return await navigationService.GoBackAsync();
+	}
+
+	public async Task<INavigationResult> GoBackToWithNoParameters()
+	{
+		return await navigationService.GoBackToAsync("DestinationPage");
+	}
+
+	public async Task<INavigationResult> GoBackToRootWithNoParameters()
+	{
+		return await navigationService.GoBackToRootAsync();
+	}
 }
