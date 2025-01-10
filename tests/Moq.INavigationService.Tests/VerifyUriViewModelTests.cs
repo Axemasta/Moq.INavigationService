@@ -69,6 +69,56 @@ public class VerifyUriViewModelTests : FixtureBase<SampleUriViewModel>
 	}
 
 	[Fact]
+	public async Task Verify_NavigateToHomePageWithComplexParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.NavigateToHomePageWithComplexParameters();
+
+		// Assert
+		var expectedParams = new NavigationParameters
+		{
+			{
+				"List", new List<string>()
+				{
+					"Hello World",
+					"123456"
+				}
+			},
+		};
+
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("HomePage", expectedParams),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_NavigateToHomePageWithComplexParametersViaUri()
+	{
+		// Arrange
+
+		// Act
+		await Sut.NavigateToHomePageWithComplexParametersViaUri();
+
+		// Assert
+		var expectedParams = new NavigationParameters
+		{
+			{
+				"List", new List<string>()
+				{
+					"Hello World",
+					"123456"
+				}
+			},
+		};
+
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync(new Uri("HomePage", UriKind.Relative), expectedParams),
+			Times.Once());
+	}
+
+	[Fact]
 	public async Task Verify_NavigateToModalHomePage()
 	{
 		// Arrange

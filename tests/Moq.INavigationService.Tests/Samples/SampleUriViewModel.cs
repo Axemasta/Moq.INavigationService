@@ -46,6 +46,40 @@ public class SampleUriViewModel(INavigationService navigationService)
 		return await navigationService.NavigateAsync(uri, navParams);
 	}
 
+	public async Task<INavigationResult> NavigateToHomePageWithComplexParameters()
+	{
+		var navParams = new NavigationParameters
+		{
+			{
+				"List", new List<string>()
+				{
+					"Hello World",
+					"123456"
+				}
+			},
+		};
+
+		return await navigationService.NavigateAsync("HomePage", navParams);
+	}
+
+	public async Task<INavigationResult> NavigateToHomePageWithComplexParametersViaUri()
+	{
+		var uri = new Uri("HomePage", UriKind.Relative);
+
+		var navParams = new NavigationParameters
+		{
+			{
+				"List", new List<string>()
+				{
+					"Hello World",
+					"123456"
+				}
+			},
+		};
+
+		return await navigationService.NavigateAsync(uri, navParams);
+	}
+
 	public async Task<INavigationResult> NavigateToNavigationHomePage()
 	{
 		return await navigationService.NavigateAsync("NavigationPage/HomePage");

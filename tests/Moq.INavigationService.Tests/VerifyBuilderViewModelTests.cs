@@ -336,5 +336,26 @@ public class VerifyBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
 			Times.Once());
 	}
 
+	[Fact]
+	public async Task NavigateToHomePageWithComplexAddParameters_WhenCalled_ShouldVerify()
+	{
+		// Arrange
+
+		// Act
+		await Sut.NavigateToHomePageWithComplexAddParameters();
+
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.CreateBuilder()
+				.AddSegment<HomePage>()
+				.AddParameter("List", new List<string>()
+				{
+					"Hello World",
+					"123456"
+				})
+				.NavigateAsync(),
+			Times.Once());
+	}
+
 	#endregion Tests
 }

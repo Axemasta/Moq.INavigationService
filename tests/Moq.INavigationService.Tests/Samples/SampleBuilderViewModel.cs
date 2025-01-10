@@ -95,6 +95,20 @@ public class SampleBuilderViewModel(INavigationService navigationService)
 			.NavigateAsync();
 	}
 
+	public async Task<INavigationResult> NavigateToHomePageWithComplexAddParameters()
+	{
+		var list = new List<string>()
+		{
+			"Hello World",
+			"123456"
+		};
+
+		return await navigationService.CreateBuilder()
+			.AddSegment<HomePage>()
+			.AddParameter("List", list)
+			.NavigateAsync();
+	}
+
 	public async Task<INavigationResult> NavigateToModalFromParameterNavigationHome()
 	{
 		return await navigationService.CreateBuilder()
