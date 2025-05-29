@@ -136,6 +136,6 @@ jobs:
         body: "TODO"
 
     - name: Publish NuGet
-      run: nuget push Artifacts/**/*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{ secrets.NUGET_API_KEY }} -SkipDuplicate
+      run: dotnet nuget push Artifacts/**/*.nupkg --source 'https://api.nuget.org/v3/index.json' --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
 
 
