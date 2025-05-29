@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using Prism.Common;
 using Prism.Navigation.Builder;
 namespace Moq;
 
@@ -21,9 +22,20 @@ internal class NavigationExpressionArgs
 
 	public static NavigationExpressionArgs FromNavigateUriExpression(Expression expression)
 	{
+		var methodCall = (MethodCallExpression)((LambdaExpression)expression).Body;
+
+		if (methodCall.Arguments.Count == 0)
+		{
+			throw new InvalidOperationException("The method call does not have any arguments, cannot parse navigation expression.");
+		}
+
+		var firstArgumentIsNavigationService = methodCall.Arguments[0].Type == typeof(INavigationService);
+
+		var index = firstArgumentIsNavigationService ? 1 : 0;
+
 		return new NavigationExpressionArgs
 		{
-			NavigationUri = GetNavigationUriFrom(expression, 1),
+			NavigationUri = GetNavigationUriFrom(expression, index),
 			NavigationParameters = ExpressionInspector.GetArgOf<NavigationParameters>(expression),
 		};
 	}
@@ -255,12 +267,7 @@ internal class NavigationExpressionArgs
 		{
 			var destinationString = ExpressionInspector.GetArgOf<string>(expression);
 
-			if (Uri.TryCreate(destinationString, UriKind.RelativeOrAbsolute, out var destinationUri))
-			{
-				return destinationUri;
-			}
-
-			throw new NotSupportedException($"Could not parse destination string as uri: {destinationString}");
+			return UriParsingHelper.Parse(destinationString);
 		}
 
 		throw new NotSupportedException("Could not determine navigation destination from expression");

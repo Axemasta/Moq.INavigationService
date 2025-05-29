@@ -13,6 +13,40 @@ public class SampleUriViewModel(INavigationService navigationService)
 		return await navigationService.NavigateAsync("HomePage");
 	}
 
+	public async Task<INavigationResult> NavigateToAbsoluteHomePage()
+	{
+		return await navigationService.NavigateAsync("/NavigationPage/HomePage");
+	}
+
+	public async Task<INavigationResult> NavigateToAbsoluteHomePageViaUri()
+	{
+		var uri = new Uri("/NavigationPage/HomePage", UriKind.Relative);
+
+		return await navigationService.NavigateAsync(uri);
+	}
+
+	public async Task<INavigationResult> NavigateToAbsoluteHomePageWithParameters()
+	{
+		var navParams = new NavigationParameters()
+		{
+			{ "Name", "Glork" },
+		};
+
+		return await navigationService.NavigateAsync("/NavigationPage/HomePage", navParams);
+	}
+
+	public async Task<INavigationResult> NavigateToAbsoluteHomePageViaUriWithParameters()
+	{
+		var uri = new Uri("/NavigationPage/HomePage", UriKind.Relative);
+
+		var navParams = new NavigationParameters()
+		{
+			{ "Name", "Glork" },
+		};
+
+		return await navigationService.NavigateAsync(uri, navParams);
+	}
+
 	public async Task<INavigationResult> NavigateToHomePageViaUri()
 	{
 		var uri = new Uri("HomePage", UriKind.Relative);
