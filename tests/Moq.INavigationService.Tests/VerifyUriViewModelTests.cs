@@ -255,5 +255,74 @@ public class VerifyUriViewModelTests : FixtureBase<SampleUriViewModel>
 			Times.Once());
 	}
 
+	[Fact]
+	public async Task Verify_NavigateToAbsoluteHomePage()
+	{
+		// Arrange
+
+		// Act
+		await Sut.NavigateToAbsoluteHomePage();
+
+		// Assert
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("/NavigationPage/HomePage"),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_NavigateToAbsoluteHomePageViaUri()
+	{
+		// Arrange
+
+		// Act
+		await Sut.NavigateToAbsoluteHomePageViaUri();
+
+		// Assert
+		var expectedUri = new Uri("/NavigationPage/HomePage", UriKind.Relative);
+
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync(expectedUri),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_NavigateToAbsoluteHomePageWithParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.NavigateToAbsoluteHomePageWithParameters();
+
+		// Assert
+		var expectedParams = new NavigationParameters()
+		{
+			{ "Name", "Glork" },
+		};
+
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync("/NavigationPage/HomePage", expectedParams),
+			Times.Once());
+	}
+
+	[Fact]
+	public async Task Verify_NavigateToAbsoluteHomePageViaUriWithParameters()
+	{
+		// Arrange
+
+		// Act
+		await Sut.NavigateToAbsoluteHomePageViaUriWithParameters();
+
+		// Assert
+		var expectedUri = new Uri("/NavigationPage/HomePage", UriKind.Relative);
+		var expectedParams = new NavigationParameters()
+		{
+			{ "Name", "Glork" },
+		};
+
+		navigationService.VerifyNavigation(
+			nav => nav.NavigateAsync(expectedUri, expectedParams),
+			Times.Once());
+	}
+
 	#endregion Tests
 }
