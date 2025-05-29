@@ -11,6 +11,7 @@ on:
     paths:
       - 'src/**'
       - 'version.json'
+      - '.github/workflows/ci.yml'
 
 jobs:
   test:
