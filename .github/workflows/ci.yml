@@ -72,6 +72,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+
     - name: Download artifacts
       id: download-artifact
       uses: actions/download-artifact@v4
