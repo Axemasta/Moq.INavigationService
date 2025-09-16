@@ -25,6 +25,8 @@
 		<PackageProjectUrl>https://github.com/Axemasta/Moq.INavigationService</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
 	<ItemGroup>
