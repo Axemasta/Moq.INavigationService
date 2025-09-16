@@ -1,4 +1,5 @@
-using FluentAssertions;
+using Xunit;
+
 namespace Moq;
 
 internal class EquivalenceHelper
@@ -7,8 +8,7 @@ internal class EquivalenceHelper
 	{
 		try
 		{
-			a.Should().BeEquivalentTo(b);
-
+			Assert.Equivalent(a, b);
 			return true;
 		}
 		catch

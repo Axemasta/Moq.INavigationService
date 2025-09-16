@@ -59,7 +59,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: drop
-        path: src/**/*.nupkg
+        path: |
+          src/**/*.nupkg
+          src/**/*.snupkg
 
   release:
     needs: build
@@ -69,6 +71,8 @@ jobs:
       IS_PRERELEASE: true
       RELEASE_TITLE: v0.0.1
       VERSION_NAME: 0.0.1
+      ARTIFACT_NAME: 'drop'
+      ARTIFACTS: 'Artifacts/**/*.nupkg'
     steps:
     - uses: actions/checkout@v3
 
@@ -131,7 +135,7 @@ jobs:
     - uses: ncipollo/release-action@main
       name: Create Release
       with:
-        artifacts: Artifacts/**/*.nupkg
+        artifacts: 'Artifacts/**/*.nupkg,Artifacts/**/*.snupkg'
         artifactErrorsFailBuild: true
         draft: true
         generateReleaseNotes: true
@@ -140,7 +144,8 @@ jobs:
         prerelease: ${{ env.IS_PRERELEASE }}
         body: "TODO"
 
+    # Nuget will automatically pick up the symbol packages if they are in the same location as the main package
     - name: Publish NuGet
-      run: dotnet nuget push Artifacts/**/*.nupkg --source 'https://api.nuget.org/v3/index.json' --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+      run: dotnet nuget push ${{ env.ARTIFACTS }} --source 'https://api.nuget.org/v3/index.json' --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
 
 
