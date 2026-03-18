@@ -73,6 +73,11 @@ jobs:
       VERSION_NAME: 0.0.1
       ARTIFACT_NAME: 'drop'
       ARTIFACTS: 'Artifacts/**/*.nupkg'
+
+    permissions:
+      id-token: write 
+      contents: write
+
     steps:
     - uses: actions/checkout@v3
 
@@ -144,8 +149,12 @@ jobs:
         prerelease: ${{ env.IS_PRERELEASE }}
         body: "TODO"
 
-    # Nuget will automatically pick up the symbol packages if they are in the same location as the main package
+    - name: NuGet login (OIDC - temp API key)
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: Axemasta
+
     - name: Publish NuGet
-      run: dotnet nuget push ${{ env.ARTIFACTS }} --source 'https://api.nuget.org/v3/index.json' --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
-
-
+      run: |
+        dotnet nuget push ${{ env.ARTIFACTS }} --source 'https://api.nuget.org/v3/index.json' --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --skip-duplicate
