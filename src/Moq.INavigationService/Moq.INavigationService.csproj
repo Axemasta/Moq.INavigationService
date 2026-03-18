@@ -38,13 +38,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CompareNETObjects" Version="4.84.0" />
 		<PackageReference Include="Moq" Version="4.20.72" />
 		<PackageReference Include="Prism.Maui" Version="9.0.537" />
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.7.115">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="xunit" Version="2.9.3" PrivateAssets="All"/>
 	</ItemGroup>
 
 </Project>
