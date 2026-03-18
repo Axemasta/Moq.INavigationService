@@ -1,16 +1,11 @@
-using Moq.Tests.Samples;
-namespace Moq.Tests;
+using Moq.INavigationServiceTests.Samples;
+namespace Moq.INavigationServiceTests;
 
 public class VerifyUriViewModelTests : FixtureBase<SampleUriViewModel>
 {
 	#region Setup
 
-	private readonly MockNavigationService navigationService;
-
-	public VerifyUriViewModelTests()
-	{
-		navigationService = new MockNavigationService();
-	}
+	private readonly MockNavigationService navigationService = new();
 
 	public override SampleUriViewModel CreateSystemUnderTest()
 	{

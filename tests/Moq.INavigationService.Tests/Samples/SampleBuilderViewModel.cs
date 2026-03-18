@@ -1,4 +1,5 @@
-using Moq.Tests.Samples;
+using Moq.INavigationServiceTests.Samples;
+
 namespace Moq.Tests;
 
 /*
@@ -7,8 +8,6 @@ namespace Moq.Tests;
 
 public class SampleBuilderViewModel(INavigationService navigationService)
 {
-	private readonly INavigationService navigationService = navigationService;
-
 	public async Task<INavigationResult> NavigateToHomePage()
 	{
 		return await navigationService.CreateBuilder()

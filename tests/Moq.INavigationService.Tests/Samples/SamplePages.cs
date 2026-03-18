@@ -1,4 +1,4 @@
-namespace Moq.Tests.Samples;
+namespace Moq.INavigationServiceTests.Samples;
 
 public class HomePage : ContentPage
 {

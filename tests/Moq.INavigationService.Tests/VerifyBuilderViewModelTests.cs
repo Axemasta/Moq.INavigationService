@@ -1,5 +1,7 @@
-using Moq.Tests.Samples;
-namespace Moq.Tests;
+using Moq.INavigationServiceTests.Samples;
+using Moq.Tests;
+
+namespace Moq.INavigationServiceTests;
 
 public class VerifyBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
 {

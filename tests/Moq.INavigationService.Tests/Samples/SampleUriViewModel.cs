@@ -1,4 +1,4 @@
-namespace Moq.Tests.Samples;
+namespace Moq.INavigationServiceTests.Samples;
 
 /*
 * Test viewmodel using the uri based navigation api

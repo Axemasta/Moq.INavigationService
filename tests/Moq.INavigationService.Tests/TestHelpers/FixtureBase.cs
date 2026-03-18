@@ -1,4 +1,4 @@
-namespace Moq.Tests.TestHelpers;
+namespace Moq.INavigationServiceTests.TestHelpers;
 
 public abstract class FixtureBase<TSut>
 {
