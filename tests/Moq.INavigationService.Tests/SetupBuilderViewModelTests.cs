@@ -1,16 +1,13 @@
-using Moq.Tests.Samples;
-namespace Moq.Tests;
+using Moq.INavigationServiceTests.Samples;
+using Moq.Tests;
+
+namespace Moq.INavigationServiceTests;
 
 public class SetupBuilderViewModelTests : FixtureBase<SampleBuilderViewModel>
 {
 	#region Setup
 
-	private readonly MockNavigationService navigationService;
-
-	public SetupBuilderViewModelTests()
-	{
-		navigationService = new MockNavigationService();
-	}
+	private readonly MockNavigationService navigationService = new();
 
 	public override SampleBuilderViewModel CreateSystemUnderTest()
 	{

@@ -1,13 +1,8 @@
-namespace Moq.Tests;
+namespace Moq.INavigationServiceTests;
 
 public class SetupNavigationExtensionTests
 {
-	private readonly MockNavigationService navigationService;
-
-	public SetupNavigationExtensionTests()
-	{
-		navigationService = new MockNavigationService();
-	}
+	private readonly MockNavigationService navigationService = new();
 
 	[Fact]
 	public async Task SetupAllNavigationReturns_Should_MakeAllNavigationCallsReturnValue()

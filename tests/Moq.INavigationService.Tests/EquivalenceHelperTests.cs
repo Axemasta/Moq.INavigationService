@@ -1,19 +1,16 @@
-using Xunit.Abstractions;
-namespace Moq.Tests;
+namespace Moq.INavigationServiceTests;
 
 public class EquivalenceHelperTests(ITestOutputHelper testOutputHelper)
 {
-	private readonly ITestOutputHelper testOutput = testOutputHelper;
-
 	[Theory]
 	[MemberData(nameof(EqualsTestData))]
 	public void AreEquivalent_Should_DetermineCorrectly(object? a, object? b, bool expectedEquivalent)
 	{
 		// Arrange
-		testOutput.WriteLine("Called with params:");
-		testOutput.WriteLine($"ParameterA: {a}");
-		testOutput.WriteLine($"ParameterB: {b}");
-		testOutput.WriteLine($"ExpectedEquivalent: {expectedEquivalent}");
+		testOutputHelper.WriteLine("Called with params:");
+		testOutputHelper.WriteLine($"ParameterA: {a}");
+		testOutputHelper.WriteLine($"ParameterB: {b}");
+		testOutputHelper.WriteLine($"ExpectedEquivalent: {expectedEquivalent}");
 
 		// Act
 		var equivalent = EquivalenceHelper.AreEquivalent(a, b);

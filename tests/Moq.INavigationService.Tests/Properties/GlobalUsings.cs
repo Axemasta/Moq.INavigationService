@@ -1,3 +1,3 @@
-global using Moq.Tests.TestHelpers;
+global using Moq.INavigationServiceTests.TestHelpers;
 global using Prism.Navigation;
 global using Xunit;

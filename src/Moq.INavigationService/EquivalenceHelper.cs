@@ -1,19 +1,13 @@
-using Xunit;
+using KellermanSoftware.CompareNetObjects;
 
 namespace Moq;
 
-internal class EquivalenceHelper
+internal sealed class EquivalenceHelper
 {
+	private static readonly CompareLogic CompareLogic = new();
+
 	public static bool AreEquivalent(object? a, object? b)
 	{
-		try
-		{
-			Assert.Equivalent(a, b);
-			return true;
-		}
-		catch
-		{
-			return false;
-		}
+		return CompareLogic.Compare(a, b).AreEqual;
 	}
 }

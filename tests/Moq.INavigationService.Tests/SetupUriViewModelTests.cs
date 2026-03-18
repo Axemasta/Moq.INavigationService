@@ -1,5 +1,6 @@
-using Moq.Tests.Samples;
-namespace Moq.Tests;
+using Moq.INavigationServiceTests.Samples;
+
+namespace Moq.INavigationServiceTests;
 
 public class SetupUriViewModelTests : FixtureBase<SampleUriViewModel>
 {
